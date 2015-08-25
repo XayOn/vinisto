@@ -56,12 +56,16 @@ def main():
     from vinisto.plugins.repeat import Repeat
 
     vinisto = Vinisto()
-    vinisto.stt = GoogleSTT('es-ES', {'rate': 24000},
+    vinisto.stt = GoogleSTT('es-ES', {'rate': 24000},  # RPI external mic =)
                             "AIzaSyCuOvb2qd0mhQRkIbGAcgMUmFQaLIXtlmg")
     vinisto.tts = GoogleTTS('es-ES')
     vinisto.register_plugin(Time)
     vinisto.register_plugin(Repeat)
     while True:
+        # This is blocking.
+        # GoogleTTS has the hability to be run in background and call callbacks
+        # each time it recognises text... but not every other STT.
+        # And one of the main goals is... well, support all possible STTs
         vinisto.execute_callbacks()
 
 
