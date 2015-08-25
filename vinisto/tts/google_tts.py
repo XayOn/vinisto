@@ -6,9 +6,8 @@
 """
 
 from tempfile import NamedTemporaryFile
-import subprocess
 from gtts import gTTS
-import os
+import pygame
 
 
 class GoogleTTS(object):
@@ -22,8 +21,14 @@ class GoogleTTS(object):
         """
             Play text with stt + mplayer
         """
-        with NamedTemporaryFile(delete=False) as file_:
+        with NamedTemporaryFile() as file_:
             gTTS(text=text, lang=self.language).write_to_fp(file_)
-            filename = file_.name
-        subprocess.call(['mplayer', filename])
-        os.unlink(filename)
+
+            pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=4096)
+            pygame.mixer.music.load(file_.name)
+            pygame.mixer.music.play()
+
+            while pygame.mixer.music.get_busy():
+                pygame.time.Clock().tick(100)
+
+            pygame.time.Clock().tick(100)

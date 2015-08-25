@@ -17,11 +17,14 @@ Installation
 ------------
 
 This requires pyaudio.
-I recommend installing pyaudio from your package manager, IE in debian
+I recommend installing pyaudio from your package manager
+It also requires pygame, wich requires the same treatment.
+
+IE debian:
 
 ::
 
-    apt-get install python-pyaudio
+    apt-get install python-pyaudio python-pygame
 
 After that, pip install vinisto will do the magic.
 
