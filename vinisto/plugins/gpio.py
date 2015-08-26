@@ -14,9 +14,9 @@ except ImportError:
     RUN = False
 
 
-class Repeat(object):
+class Gpio(object):
     """
-       Repeats
+        Turn on/off GPIOs
     """
     def __init__(self, caller):
         self.caller = caller
