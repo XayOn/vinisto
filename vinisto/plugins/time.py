@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+
+from __future__ import unicode_literals
 from datetime import datetime
 import locale
 
@@ -18,7 +20,7 @@ class Time(object):
     def __init__(self, caller):
         self.caller = caller
         self.triggers = {
-            'qué hora es'.decode('utf-8'): ['es_ES.utf-8', 'Son las {}'],
+            u'qué hora es': ['es_ES.utf-8', 'Son las {}'],
             'what time is it': ['en_US', 'It\'s {}']
         }
 
@@ -31,6 +33,7 @@ class Time(object):
 
             if trigger in text:
                 locale.setlocale(locale.LC_TIME, result[0])
-                time = result[1].format(datetime.now().strftime(" %H %M %p").replace(" 0", " "))
+                date_ = datetime.now().strftime(" %H %M %p").replace(" 0", " ")
+                time = result[1].format(date_)
                 print(time)
                 self.caller.tts.say(time)
