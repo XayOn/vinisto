@@ -14,6 +14,9 @@ except ImportError:
     RUN = False
 
 
+VERBS = ['Si', 'No']
+
+
 class Gpio(object):
     """
         Turn on/off GPIOs
@@ -25,6 +28,7 @@ class Gpio(object):
             'apaga la luz': [12, GPIO.OUT, 0],
             'enciende la tetera': [13, GPIO.OUT, 1],
             'apaga la tetera': [13, GPIO.OUT, 0],
+            'hay luz?': [14, GPIO.IN, lambda x: self.caller.tts.say(VERBS[x])]
         }
 
     def callback(self, text):
@@ -38,4 +42,7 @@ class Gpio(object):
         for trigger, data in self.triggers.items():
             if trigger in text:
                 GPIO.setup(data[0], data[1])
-                GPIO.output(data[0], data[2])
+                if data[1] == GPIO.OUT:
+                    GPIO.output(data[0], data[2])
+                else:
+                    data[2](GPIO.input(data[0]))
