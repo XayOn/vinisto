@@ -28,7 +28,7 @@ class Vinisto(object):
 
     def wait_for_keyword(self, keyword):
         while True:
-            if next(self.tts.text) == keyword:
+            if next(self.stt.text) == keyword:
                 break
 
     def execute_callbacks(self):
