@@ -59,7 +59,6 @@ def main():
     from vinisto.stt.google_stt import GoogleSTT
     from vinisto.plugins.time import Time
     from vinisto.plugins.repeat import Repeat
-    from vinisto.plugins.gpio import Gpio
 
     vinisto = Vinisto()
     vinisto.stt = GoogleSTT('es-ES', {'rate': 24000},  # RPI external mic =)
@@ -67,7 +66,12 @@ def main():
     vinisto.tts = GoogleTTS('es-ES')
     vinisto.register_plugin(Time)
     vinisto.register_plugin(Repeat)
-    vinisto.register_plugin(Gpio)
+    try:
+        from vinisto.plugins.gpio import Gpio
+        vinisto.register_plugin(Gpio)
+    except RuntimeError:
+        pass
+
 
     while True:
         vinisto.wait_for_keyword('vinisto')
