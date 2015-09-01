@@ -72,3 +72,10 @@ Previous usage example is perfect to illustrate how to use them.
 And `vinisto.tts.google_tts` for the tts part,
 `vinisto.stt.google_stt` for the stt part and finally
 `vinisto.plugins.time` for the plugins part
+
+
+Using vinisto
+-------------
+
+Vinisto waits for a keyword "vinisto" (that can be changed on main.py).
+After that, it'll receive one phrase, and will try to execute it.
