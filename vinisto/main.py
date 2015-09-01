@@ -26,6 +26,11 @@ class Vinisto(object):
         """
         self.plugins.append(plugin(self))
 
+    def wait_for_keyword(self, keyword):
+        while True:
+            if next(self.tts.text) == keyword:
+                break
+
     def execute_callbacks(self):
         """
             Launch callback function on all registered plugins
@@ -63,11 +68,9 @@ def main():
     vinisto.register_plugin(Time)
     vinisto.register_plugin(Repeat)
     vinisto.register_plugin(Gpio)
+
     while True:
-        # This is blocking.
-        # GoogleTTS has the hability to be run in background and call callbacks
-        # each time it recognises text... but not every other STT.
-        # And one of the main goals is... well, support all possible STTs
+        vinisto.wait_for_keyword('vinisto')
         vinisto.execute_callbacks()
 
 
