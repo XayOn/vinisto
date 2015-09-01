@@ -26,6 +26,11 @@ class Vinisto(object):
         """
         self.plugins.append(plugin(self))
 
+    def wait_for_keyword(self, keyword):
+        while True:
+            if next(self.stt.text) == keyword:
+                break
+
     def execute_callbacks(self):
         """
             Launch callback function on all registered plugins
@@ -54,7 +59,6 @@ def main():
     from vinisto.stt.google_stt import GoogleSTT
     from vinisto.plugins.time import Time
     from vinisto.plugins.repeat import Repeat
-    from vinisto.plugins.gpio import Gpio
 
     vinisto = Vinisto()
     vinisto.stt = GoogleSTT('es-ES', {'rate': 24000},  # RPI external mic =)
@@ -62,12 +66,15 @@ def main():
     vinisto.tts = GoogleTTS('es-ES')
     vinisto.register_plugin(Time)
     vinisto.register_plugin(Repeat)
-    vinisto.register_plugin(Gpio)
+    try:
+        from vinisto.plugins.gpio import Gpio
+        vinisto.register_plugin(Gpio)
+    except RuntimeError:
+        pass
+
+
     while True:
-        # This is blocking.
-        # GoogleTTS has the hability to be run in background and call callbacks
-        # each time it recognises text... but not every other STT.
-        # And one of the main goals is... well, support all possible STTs
+        vinisto.wait_for_keyword('vinisto')
         vinisto.execute_callbacks()
 
 

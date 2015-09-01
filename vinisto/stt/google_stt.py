@@ -41,6 +41,9 @@ class GoogleSTT(object):
             Waits for text to be recognized, then yields it
         """
         while True:
-            audio = self.get_audio()
-            LOG.info("Recognized: %s", audio)
-            yield audio
+            try:
+                audio = self.get_audio()
+                LOG.info("Recognized: %s", audio)
+                yield audio
+            except LookupError:
+                pass
