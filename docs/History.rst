@@ -1,6 +1,11 @@
 HISTORY
 -------
 
+0.0.9
++++++
+
+* Added Infrared support as a module
+
 0.0.8
 +++++
 
