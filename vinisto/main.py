@@ -112,14 +112,26 @@ def main():
                         help='Keyword to wait for',
                         default='vinisto')
 
+    parser.add_argument('--rate', type=str,
+                        help="Mic rate, defaults to raspberry pi USB (24000)",
+                        default=24000)
+
+    parser.add_argument('--language', type=str,
+                        help="Language to use in both TTS and STT",
+                        default="es-ES")
+
+    parser.add_argument('--key', type=str,
+                        help="Key to be passed to STT engines.",
+                        default="AIzaSyCuOvb2qd0mhQRkIbGAcgMUmFQaLIXtlmg")
+
     args = parser.parse_args()
 
     TTS = next(extract_classes([args.tts]))
     STT = next(extract_classes([args.stt]))
 
-    vinisto_.stt = STT(language='es-ES', rate=24000,
-                       key="AIzaSyCuOvb2qd0mhQRkIbGAcgMUmFQaLIXtlmg")
-    vinisto_.tts = TTS(language='es-ES')
+    vinisto_.stt = STT(language=args.language, rate=args.rate,
+                       key=args.key)
+    vinisto_.tts = TTS(language=args.language)
 
     for class_ in extract_classes(plugins):
         vinisto_.register_plugin(class_)

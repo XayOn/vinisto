@@ -41,6 +41,7 @@ command
                    [--plugins [{vinisto.plugins.gpio,vinisto.plugins.repeat,vinisto.plugins.time}]]
                    [--stt {vinisto.stt.google_stt}]
                    [--tts {vinisto.tts.google_tts}] [--keyword KEYWORD]
+                   [--rate RATE] [--language LANGUAGE] [--key KEY]
 
     Vinisto - Your personal butler
 
@@ -53,6 +54,9 @@ command
       --tts {vinisto.tts.google_tts}
                             List of tts modules
       --keyword KEYWORD     Keyword to wait for
+      --rate RATE           Mic rate, defaults to raspberry pi USB (24000)
+      --language LANGUAGE   Language to use in both TTS and STT
+      --key KEY             Key to be passed to STT engines.
 
 
 
