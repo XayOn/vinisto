@@ -1,6 +1,11 @@
 HISTORY
 -------
 
+0.0.10
+++++++
+
+* Updated documentation
+
 0.0.9
 +++++
 

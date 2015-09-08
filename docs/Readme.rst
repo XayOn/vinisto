@@ -38,16 +38,17 @@ command
 ::
 
     usage: vinisto [-h]
-                   [--plugins [{vinisto.plugins.gpio,vinisto.plugins.repeat,vinisto.plugins.time}]]
+                   [--plugins [{vinisto.plugins.gpio,vinisto.plugins.ir,vinisto.plugins.repeat,vinisto.plugins.time}]]
                    [--stt {vinisto.stt.google_stt}]
                    [--tts {vinisto.tts.google_tts}] [--keyword KEYWORD]
                    [--rate RATE] [--language LANGUAGE] [--key KEY]
+                   [--response_phrase RESPONSE_PHRASE]
 
     Vinisto - Your personal butler
 
     optional arguments:
       -h, --help            show this help message and exit
-      --plugins [{vinisto.plugins.gpio,vinisto.plugins.repeat,vinisto.plugins.time}]
+      --plugins [{vinisto.plugins.gpio,vinisto.plugins.ir,vinisto.plugins.repeat,vinisto.plugins.time}]
                             List of plugin modules
       --stt {vinisto.stt.google_stt}
                             List of stt modules
@@ -57,7 +58,8 @@ command
       --rate RATE           Mic rate, defaults to raspberry pi USB (24000)
       --language LANGUAGE   Language to use in both TTS and STT
       --key KEY             Key to be passed to STT engines.
-
+      --response_phrase RESPONSE_PHRASE
+                            What to say when the keyword has been detected
 
 
 wich WAS (now it handles arguments, but still...) basically
