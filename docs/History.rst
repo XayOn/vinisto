@@ -1,6 +1,12 @@
 HISTORY
 -------
 
+0.0.8
++++++
+
+* Added support for response phrase.
+* Added support to speaking a whole phrase with the keyword on it.
+
 0.0.7
 +++++
 
