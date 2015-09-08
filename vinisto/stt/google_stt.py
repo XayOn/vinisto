@@ -7,8 +7,7 @@ Google STT plugin
 import speech_recognition as sr
 import logging
 
-
-logging.basicConfig(loglevel=logging.DEBUG)
+logging.basicConfig(loglevel=logging.INFO)
 LOG = logging.getLogger(__name__)
 
 
@@ -16,10 +15,10 @@ class GoogleSTT(object):
     """
         Google Speech recognition
     """
-    def __init__(self, language, mic_params, key):
+    def __init__(self, language, rate, key):
         self.language = language
-        self.rate = mic_params['rate']
-        self.chunk = mic_params['rate'] / 2
+        self.rate = rate
+        self.chunk = rate / 2
         self.key = key
 
     def get_audio(self):
@@ -44,6 +43,6 @@ class GoogleSTT(object):
             try:
                 audio = self.get_audio()
                 LOG.info("Recognized: %s", audio)
-                yield audio
+                yield audio.lower()
             except LookupError:
                 pass

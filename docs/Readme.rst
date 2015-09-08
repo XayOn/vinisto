@@ -37,9 +37,26 @@ command
 
 ::
 
-    vinisto
+    usage: vinisto [-h]
+                   [--plugins [{vinisto.plugins.gpio,vinisto.plugins.repeat,vinisto.plugins.time}]]
+                   [--stt {vinisto.stt.google_stt}]
+                   [--tts {vinisto.tts.google_tts}] [--keyword KEYWORD]
 
-wich is basically
+    Vinisto - Your personal butler
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      --plugins [{vinisto.plugins.gpio,vinisto.plugins.repeat,vinisto.plugins.time}]
+                            List of plugin modules
+      --stt {vinisto.stt.google_stt}
+                            List of stt modules
+      --tts {vinisto.tts.google_tts}
+                            List of tts modules
+      --keyword KEYWORD     Keyword to wait for
+
+
+
+wich WAS (now it handles arguments, but still...) basically
 
 ::
 
@@ -56,6 +73,7 @@ wich is basically
     vinisto.register_plugin(Repeat)
     while True:
         vinisto.execute_callbacks()
+
 
 
 Expanding vinisto
