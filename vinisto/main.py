@@ -8,6 +8,7 @@ import inspect
 import logging
 import pkgutil
 import argparse
+from collections import defaultdict
 import vinisto.plugins
 import vinisto.tts
 import vinisto.stt
@@ -16,6 +17,14 @@ from importlib import import_module
 
 logging.basicConfig(level=logging.DEBUG)
 LOG = logging.getLogger(__name__)
+
+KEYWORDS = defaultdict(
+    lambda: "vinisto",
+    {
+        'es-ES': ['bautista', 'A sus ordenes'],
+        'en-US': ['Alfred', 'Yes, master?']
+    }
+)
 
 
 class Vinisto(object):
@@ -36,18 +45,24 @@ class Vinisto(object):
 
     def wait_for_keyword(self, keyword):
         while True:
-            LOG.info("Wating for keyword")
-            if next(self.stt.text) == keyword:
-                break
+            LOG.info("Wating for keyword {}".format(keyword))
+            text = next(self.stt.text)
 
-    def execute_callbacks(self):
+            if text == keyword:
+                yield False
+            elif keyword in text:
+                yield text.replace(keyword, '')
+
+    def execute_callbacks(self, text=False):
         """
             Launch callback function on all registered plugins
+            We can provide a text to be evaluated.
         """
-        try:
-            text = next(self.stt.text)
-        except LookupError:
-            pass
+        if not text:
+            try:
+                text = next(self.stt.text)
+            except LookupError:
+                pass
         for plugin in self.plugins:
             try:
                 LOG.info('Calling plugin {} callback'.format(plugin))
@@ -109,8 +124,7 @@ def main():
                         default='vinisto.tts.google_tts')
 
     parser.add_argument('--keyword',  type=str,
-                        help='Keyword to wait for',
-                        default='vinisto')
+                        help='Keyword to wait for')
 
     parser.add_argument('--rate', type=str,
                         help="Mic rate, defaults to raspberry pi USB (24000)",
@@ -136,10 +150,15 @@ def main():
     for class_ in extract_classes(plugins):
         vinisto_.register_plugin(class_)
 
-    while True:
-        vinisto_.wait_for_keyword(args.keyword)
-        LOG.info("Keyword recognized")
-        vinisto_.execute_callbacks()
+    if args.keyword:
+        keyword = args.keyword
+    else:
+        keyword = KEYWORDS[args.language][0]
+
+    for text in vinisto_.wait_for_keyword(keyword):
+        if not text:
+            vinisto_.tts.say(KEYWORDS[args.language][0])
+        vinisto_.execute_callbacks(text)
 
 
 if __name__ == "__main__":
