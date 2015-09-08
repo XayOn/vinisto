@@ -19,7 +19,7 @@ logging.basicConfig(level=logging.DEBUG)
 LOG = logging.getLogger(__name__)
 
 KEYWORDS = defaultdict(
-    lambda: "vinisto",
+    lambda: ["vinisto", "Yes, master?"],
     {
         'es-ES': ['bautista', 'A sus ordenes'],
         'en-US': ['Alfred', 'Yes, master?']
@@ -138,6 +138,9 @@ def main():
                         help="Key to be passed to STT engines.",
                         default="AIzaSyCuOvb2qd0mhQRkIbGAcgMUmFQaLIXtlmg")
 
+    parser.add_argument('--response_phrase', type=str,
+                        help="What to say when the keyword has been detected")
+
     args = parser.parse_args()
 
     TTS = next(extract_classes([args.tts]))
@@ -155,9 +158,14 @@ def main():
     else:
         keyword = KEYWORDS[args.language][0]
 
+    if args.phrase:
+        phrase = args.phrase
+    else:
+        phrase = KEYWORDS[args.language][0])
+
     for text in vinisto_.wait_for_keyword(keyword):
         if not text:
-            vinisto_.tts.say(KEYWORDS[args.language][0])
+            vinisto_.tts.say(phrase)
         vinisto_.execute_callbacks(text)
 
 
