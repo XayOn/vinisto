@@ -161,7 +161,7 @@ def main():
     if args.phrase:
         phrase = args.phrase
     else:
-        phrase = KEYWORDS[args.language][0])
+        phrase = KEYWORDS[args.language][1]
 
     for text in vinisto_.wait_for_keyword(keyword):
         if not text:
