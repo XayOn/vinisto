@@ -13,6 +13,7 @@ import vinisto.plugins
 import vinisto.tts
 import vinisto.stt
 from importlib import import_module
+from threading import Thread
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -165,7 +166,7 @@ def main():
 
     for text in vinisto_.wait_for_keyword(keyword):
         if not text:
-            vinisto_.tts.say(phrase)
+            Thread(target=vinisto_.tts.say, args=(phrase)).start()
         vinisto_.execute_callbacks(text)
 
 
