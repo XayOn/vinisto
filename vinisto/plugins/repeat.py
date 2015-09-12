@@ -6,7 +6,7 @@ from vinisto.i18n import _
 
 
 """
-Repeat
+    Repeat
 """
 
 
@@ -23,6 +23,5 @@ class Repeat(object):
              cb
         """
         text = text.lower()
-        for trigger in self.triggers:
-            if trigger in text:
-                self.caller.tts.say(text.replace(trigger, ''))
+        if self.trigger in text:
+            self.caller.tts.say(text.replace(self.trigger, ''))

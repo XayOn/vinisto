@@ -21,14 +21,14 @@ class GoogleTTS(object):
         """
             Play text with stt + mplayer
         """
-        with NamedTemporaryFile() as file_:
+        with NamedTemporaryFile(delete=False) as file_:
             gTTS(text=text, lang=self.language).write_to_fp(file_)
 
-            pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=4096)
+            pygame.mixer.init(frequency=36000)
             pygame.mixer.music.load(file_.name)
             pygame.mixer.music.play()
 
             while pygame.mixer.music.get_busy():
-                pygame.time.Clock().tick(100)
+                pygame.time.Clock().tick(1)
 
-            pygame.time.Clock().tick(100)
+            pygame.time.Clock().tick(10)
