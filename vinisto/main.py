@@ -158,7 +158,7 @@ def main():
 
     for text in vinisto_.wait_for_keyword(keyword):
         if not text:
-            Thread(target=vinisto_.tts.say, args=(phrase)).start()
+            Thread(target=vinisto_.tts.say, args=(phrase,)).start()
         vinisto_.execute_callbacks(text)
 
 
