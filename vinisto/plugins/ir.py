@@ -7,6 +7,7 @@
 """
 
 
+from vinisto.i18n import _
 import subprocess
 
 
@@ -24,7 +25,8 @@ class Repeat(object):
     def __init__(self, caller):
         self.caller = caller
         self.triggers = {
-            'pon la luz roja': ["control_luces", "roja"],
+            _(u'put the lights red'): ["light_control", "red"],
+            _(u'turn the ac off'): ["ac_control", "key_0"],
         }
 
     def callback(self, text):
