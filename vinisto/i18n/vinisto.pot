@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-12 18:56+0200\n"
+"POT-Creation-Date: 2015-09-12 19:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,10 +17,50 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.py:149
-msgid "vinisto"
-msgstr "vinisto"
+#: vinisto/plugins/ir.py:28
+msgid "put the lights red"
+msgstr ""
 
-#: main.py:150
+#: vinisto/plugins/ir.py:29
+msgid "turn the ac off"
+msgstr ""
+
+#: vinisto/plugins/time.py:22
+msgid "what time is it?"
+msgstr ""
+
+#: vinisto/plugins/time.py:22
+msgid "It's {}"
+msgstr ""
+
+#: vinisto/plugins/repeat.py:19
+msgid "repeat"
+msgstr ""
+
+#: vinisto/plugins/gpio.py:18
+msgid "Yes"
+msgstr ""
+
+#: vinisto/plugins/gpio.py:18
+msgid "No"
+msgstr ""
+
+#: vinisto/plugins/gpio.py:28
+msgid "Turn off the lights"
+msgstr ""
+
+#: vinisto/plugins/gpio.py:30
+msgid "Turn on the lights"
+msgstr ""
+
+#: vinisto/plugins/gpio.py:32
+msgid "Is there any light on?"
+msgstr ""
+
+#: vinisto/main.py:150
+msgid "vinisto"
+msgstr ""
+
+#: vinisto/main.py:151
 msgid "Yes, master?"
-msgstr "Yes, master?"
+msgstr ""
