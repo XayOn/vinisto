@@ -1,6 +1,14 @@
 HISTORY
 -------
 
+0.1.1
++++++
+
+* First bugfix release since 1
+* Fixed TTS (but still not as good as should, it goes by a nice voice now)
+* Fixed translation problems when uppercase is used
+
+
 0.1.0
 +++++
 
