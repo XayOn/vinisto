@@ -13,8 +13,9 @@ try:
 except ImportError:
     RUN = False
 
+from vinisto.i18n import _
 
-VERBS = ['Si', 'No']
+VERBS = [_(u'Yes'), _(u'No')]
 
 
 class Gpio(object):
@@ -24,11 +25,13 @@ class Gpio(object):
     def __init__(self, caller):
         self.caller = caller
         self.triggers = {
-            'enciende la luz': [12, GPIO.OUT, 1],
-            'apaga la luz': [12, GPIO.OUT, 0],
-            'enciende la tetera': [13, GPIO.OUT, 1],
-            'apaga la tetera': [13, GPIO.OUT, 0],
-            'hay luz?': [14, GPIO.IN, lambda x: self.caller.tts.say(VERBS[x])]
+            _(u'Turn off the lights'):
+                [12, GPIO.OUT, 1],
+            _(u'Turn on the lights'):
+                [12, GPIO.OUT, 0],
+            _(u'Is there any light on?'):
+                [14, GPIO.IN, lambda x: self.caller.tts.say(
+                    VERBS[x])]
         }
 
     def callback(self, text):

@@ -1,0 +1,66 @@
+# Spanish translations for PACKAGE package.
+# Copyright (C) 2015 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# xayon <me@davidfrancos.net>, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-12 19:45+0200\n"
+"PO-Revision-Date: 2015-09-12 19:46+0200\n"
+"Last-Translator: xayon <me@davidfrancos.net>\n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ASCII\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: vinisto/plugins/ir.py:28
+msgid "put the lights red"
+msgstr "pon la luz roja"
+
+#: vinisto/plugins/ir.py:29
+msgid "turn the ac off"
+msgstr "apaga el aire acondicionado"
+
+#: vinisto/plugins/time.py:22
+msgid "what time is it?"
+msgstr "que hora es?"
+
+#: vinisto/plugins/time.py:22
+msgid "It's {}"
+msgstr "Son las {}"
+
+#: vinisto/plugins/repeat.py:19
+msgid "repeat"
+msgstr "repite"
+
+#: vinisto/plugins/gpio.py:18
+msgid "Yes"
+msgstr "Si"
+
+#: vinisto/plugins/gpio.py:18
+msgid "No"
+msgstr "No"
+
+#: vinisto/plugins/gpio.py:28
+msgid "Turn off the lights"
+msgstr "Apaga la luz"
+
+#: vinisto/plugins/gpio.py:30
+msgid "Turn on the lights"
+msgstr "Enciende la luz"
+
+#: vinisto/plugins/gpio.py:32
+msgid "Is there any light on?"
+msgstr "Esta la luz encendida?"
+
+#: vinisto/main.py:150
+msgid "vinisto"
+msgstr "Bautista"
+
+#: vinisto/main.py:151
+msgid "Yes, master?"
+msgstr "Si, maestro?"
