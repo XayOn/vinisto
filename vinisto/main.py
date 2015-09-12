@@ -8,24 +8,16 @@ import inspect
 import logging
 import pkgutil
 import argparse
-from collections import defaultdict
 import vinisto.plugins
 import vinisto.tts
 import vinisto.stt
+from vinisto.i18n import _
 from importlib import import_module
 from threading import Thread
 
 
 logging.basicConfig(level=logging.DEBUG)
 LOG = logging.getLogger(__name__)
-
-KEYWORDS = defaultdict(
-    lambda: ["vinisto", "Yes, master?"],
-    {
-        'es-ES': ['bautista', 'A sus ordenes'],
-        'en-US': ['Alfred', 'Yes, master?']
-    }
-)
 
 
 class Vinisto(object):
@@ -154,15 +146,14 @@ def main():
     for class_ in extract_classes(plugins):
         vinisto_.register_plugin(class_)
 
+    keyword = _(u'vinisto')
+    phrase = _(u'Yes, master?')
+
     if args.keyword:
         keyword = args.keyword
-    else:
-        keyword = KEYWORDS[args.language][0]
 
-    if args.phrase:
-        phrase = args.phrase
-    else:
-        phrase = KEYWORDS[args.language][1]
+    if args.response_phrase:
+        phrase = args.response_phrase
 
     for text in vinisto_.wait_for_keyword(keyword):
         if not text:
