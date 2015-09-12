@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 
 
+from vinisto.i18n import _
+
+
 """
 Repeat
 """
@@ -13,9 +16,7 @@ class Repeat(object):
     """
     def __init__(self, caller):
         self.caller = caller
-        self.triggers = [
-            'repite'
-        ]
+        self.trigger = _('repeat')
 
     def callback(self, text):
         """
