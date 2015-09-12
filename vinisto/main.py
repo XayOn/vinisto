@@ -5,6 +5,7 @@
 """
 
 import inspect
+import locale
 import logging
 import pkgutil
 import argparse
@@ -125,7 +126,7 @@ def main():
 
     parser.add_argument('--language', type=str,
                         help="Language to use in both TTS and STT",
-                        default="es-ES")
+                        default=locale.getdefaultlocale()[0].replace('_', '-'))
 
     parser.add_argument('--key', type=str,
                         help="Key to be passed to STT engines.",
