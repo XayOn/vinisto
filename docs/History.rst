@@ -1,6 +1,13 @@
 HISTORY
 -------
 
+0.1.0
++++++
+
+* Made say threaded on vinisto response
+* I18n for everything.
+* Minor bugfixes
+
 0.0.10
 ++++++
 
