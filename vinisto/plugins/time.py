@@ -4,7 +4,7 @@
 
 from __future__ import unicode_literals
 from datetime import datetime
-import locale
+from vinisto.i18n import _
 
 
 """
@@ -19,21 +19,15 @@ class Time(object):
     """
     def __init__(self, caller):
         self.caller = caller
-        self.triggers = {
-            u'qué hora es': ['es_ES.utf-8', 'Son las {}'],
-            'what time is it': ['en_US', 'It\'s {}']
-        }
+        self.trigger = [_(u'what time is it?'), _(u'It\'s {}')]
 
     def callback(self, text):
         """
              cb
         """
-        for trigger, result in self.triggers.iteritems():
-            text = text.lower()
+        trigger, response = self.trigger
+        text = text.lower()
 
-            if trigger in text:
-                locale.setlocale(locale.LC_TIME, result[0])
-                date_ = datetime.now().strftime(" %H %M %p").replace(" 0", " ")
-                time = result[1].format(date_)
-                print(time)
-                self.caller.tts.say(time)
+        if trigger in text:
+            date_ = datetime.now().strftime(" %H %M %p").replace(" 0", " ")
+            self.caller.tts.say(response.format(date_))
