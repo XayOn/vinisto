@@ -6,19 +6,15 @@
 
 import inspect
 import locale
-import logging
 import pkgutil
 import argparse
 import vinisto.plugins
 import vinisto.tts
 import vinisto.stt
 from vinisto.i18n import _
+from vinisto import LOG
 from importlib import import_module
 from threading import Thread
-
-
-logging.basicConfig(level=logging.DEBUG)
-LOG = logging.getLogger(__name__)
 
 
 class Vinisto(object):
@@ -41,10 +37,13 @@ class Vinisto(object):
         while True:
             LOG.info("Wating for keyword {}".format(keyword))
             text = next(self.stt.text)
+            LOG.info(u"GOT {}".format(text))
 
             if text == keyword:
+                LOG.info("Yielding false, only keyword found")
                 yield False
             elif keyword in text:
+                LOG.info("Yielding text {}".format(text.replace(keyword, '')))
                 yield text.replace(keyword, '')
 
     def execute_callbacks(self, text=False):
@@ -156,9 +155,15 @@ def main():
     if args.response_phrase:
         phrase = args.response_phrase
 
-    for text in vinisto_.wait_for_keyword(keyword):
+    phrases = vinisto_.wait_for_keyword(keyword.lower())
+
+    for text in phrases:
+        LOG.info("Received: %s", text)
         if not text:
+            LOG.info("Asking tts to say our phrase")
             Thread(target=vinisto_.tts.say, args=(phrase,)).start()
+        LOG.info("Going to execute callbacks now:")
+        LOG.info('-------------------------------')
         vinisto_.execute_callbacks(text)
 
 
