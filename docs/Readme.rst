@@ -125,6 +125,6 @@ Communication
 
 Github issues welcome, PRs welcome (always following a code style similar to the one already here, and PEP8 compliant).
 
-image:: https://badges.gitter.im/Join%20Chat.svg
+.. image:: https://badges.gitter.im/Join%20Chat.svg
     :alt: Join the chat at https://gitter.im/XayOn/vinisto
     :target: https://gitter.im/XayOn/vinisto?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
