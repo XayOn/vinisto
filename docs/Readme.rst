@@ -103,3 +103,28 @@ Using vinisto
 
 Vinisto waits for a keyword "vinisto" (that can be changed on main.py).
 After that, it'll receive one phrase, and will try to execute it.
+
+
+Translations
+------------
+
+vinisto keyword is localized, so, in the main translation file it'll be up to each
+translator to decide the best name for vinisto in its language.
+
+That's because, in spanish, google was having trouble recognizing "vinisto" (esperanto) keyword.
+Currently, its spanish name is "Bautista", altough that might change in a future, as google voice is female, and bautista is a male name.
+
+Translations are in the i18n folder inside the package, and are easily portable.
+All plugins are translatable, and currently added to pot file.
+
+I'm looking for translators to any possible language. PRs welcome. 
+
+
+Communication
+--------------
+
+Github issues welcome, PRs welcome (always following a code style similar to the one already here, and PEP8 compliant).
+
+image:: https://badges.gitter.im/Join%20Chat.svg
+    :alt: Join the chat at https://gitter.im/XayOn/vinisto
+    :target: https://gitter.im/XayOn/vinisto?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
