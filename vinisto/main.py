@@ -40,10 +40,10 @@ class Vinisto(object):
             LOG.info(u"GOT {}".format(text))
 
             if text == keyword:
-                LOG.info("Yielding false, only keyword found")
+                LOG.info("Keyword was said alone")
                 yield False
             elif keyword in text:
-                LOG.info("Yielding text {}".format(text.replace(keyword, '')))
+                LOG.info("Received text {}".format(text.replace(keyword, '')))
                 yield text.replace(keyword, '')
 
     def execute_callbacks(self, text=False):
@@ -162,8 +162,6 @@ def main():
         if not text:
             LOG.info("Asking tts to say our phrase")
             Thread(target=vinisto_.tts.say, args=(phrase,)).start()
-        LOG.info("Going to execute callbacks now:")
-        LOG.info('-------------------------------')
         vinisto_.execute_callbacks(text)
 
 
