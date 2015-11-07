@@ -119,7 +119,7 @@ def main():
     parser.add_argument('--keyword',  type=str,
                         help='Keyword to wait for')
 
-    parser.add_argument('--rate', type=str,
+    parser.add_argument('--rate', type=int,
                         help="Mic rate, defaults to raspberry pi USB (24000)",
                         default=24000)
 
