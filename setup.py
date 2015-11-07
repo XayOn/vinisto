@@ -15,7 +15,7 @@ with open('docs/History.rst') as history_file:
 
 setup(
     name='vinisto',
-    version='0.1.4',
+    version='0.1.5',
     description="""
         Vinisto - a simple-minded home butler
     """,
