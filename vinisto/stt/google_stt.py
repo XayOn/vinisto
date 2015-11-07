@@ -25,14 +25,15 @@ class GoogleSTT(object):
         """
             Return recognized text
         """
-        rrec = sr.Recognizer('es-ES', self.key)
+        rrec = sr.Recognizer()
         mic = sr.Microphone()
         mic.RATE = self.rate
         mic.CHUNK = self.chunk
         with mic as source:
             LOG.info("Mic waiting")
             rrec.adjust_for_ambient_noise(source)
-            return rrec.recognize(rrec.listen(source))
+            return rrec.recognize_google(rrec.listen(source),
+                                         key=self.key, language='es-ES')
 
     @property
     def text(self):
