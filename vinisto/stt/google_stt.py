@@ -28,10 +28,11 @@ class GoogleSTT(object):
         rrec = sr.Recognizer()
         mic = sr.Microphone(sample_rate=self.rate, chunk_size=self.chunk)
         with mic as source:
-            LOG.info("Mic waiting")
+            LOG.info("Adjusting for ambient noise")
             rrec.adjust_for_ambient_noise(source)
+            LOG.info("Mic waiting")
             return rrec.recognize_google(rrec.listen(source),
-                                         key=self.key, language='es-ES')
+                                         language='es_ES', key=self.key)
 
     @property
     def text(self):
