@@ -26,9 +26,7 @@ class GoogleSTT(object):
             Return recognized text
         """
         rrec = sr.Recognizer()
-        mic = sr.Microphone()
-        mic.RATE = self.rate
-        mic.CHUNK = self.chunk
+        mic = sr.Microphone(sample_rate=self.rate, chunk_size=self.chunk)
         with mic as source:
             LOG.info("Mic waiting")
             rrec.adjust_for_ambient_noise(source)
