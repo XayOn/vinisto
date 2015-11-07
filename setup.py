@@ -4,11 +4,7 @@
     Vinisto
 """
 
-
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+from setuptools import setup, find_packages
 
 
 with open('docs/Readme.rst') as readme_file:
@@ -27,9 +23,7 @@ setup(
     author="David Francos Cuartero",
     author_email='me@davidfrancos.net',
     url='https://github.com/XayOn/vinisto',
-    packages=[
-        'vinisto',
-    ],
+    packages=find_packages(exclude=["tests", "docs"]),
     package_dir={'vinisto':
                  'vinisto'},
     include_package_data=True,
