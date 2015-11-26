@@ -30,6 +30,8 @@ setup(
     install_requires=[
         'gtts',
         'speechrecognition',
+        'nltk',
+        'markovify'
         #'pygame'
     ],
     license="BSD",
@@ -38,6 +40,7 @@ setup(
     entry_points={
         'console_scripts': [
             'vinisto = vinisto.main:main',
+            'ir_web = vinisto.mremote.mremote:main',
         ],
     },
     classifiers=[
