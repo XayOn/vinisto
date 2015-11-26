@@ -8,9 +8,10 @@ import inspect
 import locale
 import pkgutil
 import argparse
-import vinisto.plugins
 import vinisto.tts
 import vinisto.stt
+import vinisto.plugins
+import nltk.downloader
 from vinisto.i18n import _
 from vinisto import LOG
 from importlib import import_module
@@ -36,7 +37,10 @@ class Vinisto(object):
     def wait_for_keyword(self, keyword):
         while True:
             LOG.info("Wating for keyword {}".format(keyword))
-            text = next(self.stt.text)
+            try:
+                text = next(self.stt.text)
+            except:
+                continue
             LOG.info(u"GOT {}".format(text))
 
             if text == keyword:
@@ -60,7 +64,8 @@ class Vinisto(object):
             try:
                 LOG.info('Calling plugin {} callback'.format(plugin))
                 plugin.callback(text)
-            except:
+            except Exception:
+                LOG.exception("Error on plugin {}".format(plugin))
                 # We can't allow a bad plugin to break anything =(
                 pass
 
@@ -93,6 +98,8 @@ def main():
         This receives as parameters the vinisto modules to load.
     """
     vinisto_ = Vinisto()
+
+    nltk.downloader.download('all')
 
     plugins = extract_modules(vinisto.plugins, 'plugins')
     tts_plugins = extract_modules(vinisto.tts, 'tts')
