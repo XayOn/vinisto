@@ -1,0 +1,55 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}Universal remote web interface{% endblock %}
+
+{% block scripts %}
+{{super()}}
+
+<script src="/static/dot.js"></script>
+
+<script>
+    function hexToRgb(hex) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+        } : null;
+    }
+
+    function clickColor(htmlcolor){
+        r = hexToRgb(htmlcolor);
+        jQuery.get('/change_color/' + r.r + "," + r.g + "," + r.b, function(code, res){ console.log(res)});
+    }
+
+{%raw%}
+    remote_template = doT.template('<div id={{=it.id}} class="col-md-5"><h1>{{=it.id}}</h1></div>');
+    btn_template = doT.template("<button data-boton='{{=it.button}}' data-mando='{{=it.remote}}' class='btn btn-large btn-success boton'>{{=it.button}}</button>");
+{%endraw%}
+
+    jQuery(document).ready(function(){
+        allbtns = {{buttons|safe}};
+        window.all = allbtns;
+        $.each(allbtns, function(remote, allbtns_){
+            $('#remotes').append(remote_template({'id': remote}));
+            $(allbtns_).each(function(i, button){
+                $('#' + remote).append(btn_template({"remote": remote, "button": button}));
+            });
+        });
+
+        clrbtns = {{color_buttons|safe}};
+        $.each(clrbtns, function(i, remote_id){
+            $('#' + remote_id).append('<input type="color" id="html5colorpicker" class="col-md-4 form-control" onchange="clickColor(this.value)" value="#ff0000">');
+        });
+
+        $('.boton').on('click', function(){
+            $.getJSON('/' + $(this).attr('data-mando') + "/" + $(this).attr('data-boton'));
+        });
+    });
+
+</script>
+
+{% endblock %}
+
+{% block content %}
+    <div id="remotes"></div>
+{% endblock %}
