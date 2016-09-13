@@ -2,7 +2,7 @@
     Intent related
 """
 
-from vinisto.language import Phrase, SinonymPhrase,
+from vinisto.language import Phrase, SinonymPhrase, SyntacticMatchPhrase
 
 
 class Intent:
