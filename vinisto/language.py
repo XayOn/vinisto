@@ -35,7 +35,11 @@ class SynonimPhrase:
 
 
 class SintacticMatchPhrase:
-    pass
+    """
+        Not yet implemented
+    """
+    def __eq__(self):
+        return False
 
 
 class Phrase:
@@ -88,4 +92,4 @@ class Phrase:
         return ' '.join([a[0] for a in self.phrase])
 
     def __repr__(self):
-        return f'{self.__class__.__name__}: {self.c_phrase} - {self.language}'
+        return f'{self.__class__.__name__}: {self.c_phrase} ({self.language})'
