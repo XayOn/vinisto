@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    Vinisto
+Vinisto
 """
 
 from setuptools import setup, find_packages
@@ -28,19 +28,16 @@ setup(
                  'vinisto'},
     include_package_data=True,
     install_requires=[
-        'gtts',
-        'speechrecognition',
-        'nltk',
-        'markovify'
-        #'pygame'
+        'behave',
+        'pyknow',
+        'paho-mqtt'
     ],
     license="BSD",
     zip_safe=False,
     keywords='vinisto',
     entry_points={
         'console_scripts': [
-            'vinisto = vinisto.main:main',
-            'ir_web = vinisto.mremote.mremote:main',
+            'vinisto = vinisto:main',
         ],
     },
     classifiers=[
