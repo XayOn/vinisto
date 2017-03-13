@@ -1,0 +1,4 @@
+behave
+pyknow==0.0.10
+paho-mqtt
+
