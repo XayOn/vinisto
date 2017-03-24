@@ -3,19 +3,20 @@ Vinisto
 """
 
 from gettext import gettext as _
-import glob
+from random import choice
 import json
-import random
 import string
 
 import paho.mqtt.client as mqtt
 
+# pylint: disable=no-name-in-module
 from behave import when, then
 from behave.configuration import Configuration
-from behave.parser import parse_file
+from behave.parser import parse_feature
 from behave.runner import Runner, Context
 
 from pyknow import KnowledgeEngine, Rule, AND, Fact, L, P
+from vinisto.config import config
 
 
 class Sensor(Fact):
@@ -60,33 +61,32 @@ def set_sensor_value(context, sensor, value):
     context.final_rules.append(Rule(AND(*rules))(_set_sensor_value))
 
 
-def get_rules(features_dir):
+def get_rules(features_list):
     """ Execute gherkins and return rules """
 
-    config = Configuration()
-    config.verbose = True
-    runner = Runner(config)
+    runner = Runner(Configuration())
 
-    for filename in glob.glob(features_dir):
+    for data in features_list:
         context = Context(runner)
         context.rules = []
         context.final_rules = []
+        context.mqtt_template = config.get('main', 'mqtt_template')
         runner.context = context
-        parse_file(filename).run(runner)
+        parse_feature(data, None, None).run(runner)
         if runner.undefined_steps:
             raise Exception("Undefined {}".format(runner.undefined_steps))
         yield from context.final_rules
 
 
-def get_knowledge_engine(features_dir):
+def get_knowledge_engine(features):
     """
     Get a knowledge engine built upon a features directory
     """
 
     def _random_name():
-        return ''.join(random.choices(string.ascii_uppercase, 10))
+        return ''.join(choice(string.ascii_uppercase) for _ in range(10))
 
-    rules = get_rules(features_dir)
+    rules = get_rules(features)
     engine_cls = type(
         "Engine", (KnowledgeEngine,), {_random_name(): rule for rule in rules})
     engine = engine_cls()
@@ -120,16 +120,18 @@ def on_message(client, _, msg):
     client.engine.run()
 
 
-def main(mqtt_connect_data, mqtt_subscription_path, features_dir):
+def main(features):
     """
     Connect the mqtt server
     """
 
     client = mqtt.Client("automation")
-    client.engine = get_knowledge_engine(features_dir)
+    client.engine = get_knowledge_engine(features)
     client.engine.mqtt = client
     client.on_message = on_message
     client.on_disconnect = lambda c, u, r: c.reconnect()
-    client.connect(**mqtt_connect_data)
-    client.subscribe(mqtt_subscription_path)
+    mqtt_config = dict(config.items("mqtt"))
+    subscription = mqtt_config.pop("subscription_path")
+    client.connect(**mqtt_config)
+    client.subscribe(subscription)
     client.loop_forever()
