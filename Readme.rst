@@ -30,7 +30,7 @@ This means that given a series of files in the form::
         Then set the sensor thermostat value to 0
 
 And creates a knowledge engine with that rules, listening on MQTT changes,
-that act upon them.
+that act upon them and, when the rules matches, sends the requested MQTT signal.
 
 How to contribute
 -----------------
