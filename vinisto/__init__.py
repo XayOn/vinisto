@@ -57,7 +57,7 @@ def set_sensor_value(context, sensor, value):
 
     rules = context.rules.copy()
     context.rules.clear()
-    context.rules.append(Rule(AND(*rules))(_set_sensor_value))
+    context.final_rules.append(Rule(AND(*rules))(_set_sensor_value))
 
 
 def get_rules(features_dir):
@@ -70,11 +70,12 @@ def get_rules(features_dir):
     for filename in glob.glob(features_dir):
         context = Context(runner)
         context.rules = []
+        context.final_rules = []
         runner.context = context
         parse_file(filename).run(runner)
         if runner.undefined_steps:
             raise Exception("Undefined {}".format(runner.undefined_steps))
-        yield from context.rules
+        yield from context.final_rules
 
 
 def get_knowledge_engine(features_dir):
@@ -86,8 +87,9 @@ def get_knowledge_engine(features_dir):
         return ''.join(random.choices(string.ascii_uppercase, 10))
 
     rules = get_rules(features_dir)
-    engine = type(
+    engine_cls = type(
         "Engine", (KnowledgeEngine,), {_random_name(): rule for rule in rules})
+    engine = engine_cls()
     engine.reset()
     return engine
 
