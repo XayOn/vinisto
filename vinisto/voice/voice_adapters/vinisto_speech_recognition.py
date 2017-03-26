@@ -2,9 +2,9 @@
 Speech recognition
 """
 
-from functools import lru_cache
 import speech_recognition as speech
 from vinisto.voice.abstract import VoiceAdapter
+from vinisto.config import config
 
 
 class SpeechRecognition(metaclass=VoiceAdapter):
@@ -18,24 +18,25 @@ class SpeechRecognition(metaclass=VoiceAdapter):
 
     """
 
-    def __init__(self, config):
+    def __init__(self):
         self.recognizer = speech.Recognizer()
-        speech_config = dict(config.items(speech))
+        speech_config = dict(config.items("speech"))
         self.microphone = speech_config.pop("microphone_name", "pulse")
         self.recognition_class = speech_config.pop("recognizer", "pulse")
         self.config = speech_config
         self.source = speech.Microphone(device_index=self.mic_id)
 
-    @lru_cache()
+    @property
+    def microphones(self):
+        return speech.Microphone.list_microphone_names()
+
     def mic_id(self):
         """ Return the selected microphone ID """
-        all_m = speech.Microphone.list_microphone_names()
-        matching = [idx for idx, name in enumerate(all_m)
+        matching = [idx for idx, name in enumerate(self.microphones)
                     if name == self.microphone]
         return matching.pop()
 
     @property
-    @lru_cache()
     def recognize(self):
         """
         Return recognizer with recognition class

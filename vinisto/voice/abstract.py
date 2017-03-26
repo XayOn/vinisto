@@ -11,7 +11,7 @@ class VoiceAdapter(abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def __init__(cls, config):
+    def __init__(cls):
         super().__init__()
 
     def __iter__(cls):
