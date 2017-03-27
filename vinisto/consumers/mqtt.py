@@ -4,30 +4,28 @@ Probably to be deprecated
 """
 import json
 
-import paho.mqtt.client as mqtt
-from vinisto.config import config
 from vinisto.engine import VinistoEngine
+from vinisto.utils import mqtt_client
+from vinisto.config import config
 
 
-def main(features):
+def mqtt_consumer(features):
     """
-    Connect the mqtt server
+    Connect to the mqtt server and act upon each message received
+    on the configured queue.
     """
 
-    context = {"rules": [], "final_rules": [],
-               "mqtt_template": config.get('main', 'mqtt_template')}
-    mqtt_config = dict(config.items("mqtt"))
-    subscription = mqtt_config.pop("subscription_path")
+    def setup_client(client):
+        """
+        Setup a consumer client with a VinistoEngine execution each time
+        it receives a message.
+        """
+        context = {"rules": [], "final_rules": [],
+                   "mqtt_template": config.get('main', 'mqtt_template')}
+        client.engine = VinistoEngine(features=features, context=context)
+        client.engine.mqtt = client
+        client.on_message = lambda c, _, msg: c.engine.update_sensors(
+            json.loads(msg.payload.decode('utf-8')))
+        client.on_disconnect = lambda c, u, r: c.reconnect()
 
-    def load(msg):
-        """ Load a json message """
-        return json.loads(msg.payload.decode('utf-8'))
-
-    client = mqtt.Client("automation")
-    client.engine = VinistoEngine(features=features, context=context)
-    client.engine.mqtt = client
-    client.on_message = lambda c, _, msg: c.engine.update_sensors(load(msg))
-    client.on_disconnect = lambda c, u, r: c.reconnect()
-    client.connect(**mqtt_config)
-    client.subscribe(subscription)
-    client.loop_forever()
+    mqtt_client(setup_client)
