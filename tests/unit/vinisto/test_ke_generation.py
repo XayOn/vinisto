@@ -2,12 +2,15 @@
 
 
 def test_get_knowledge_engine_returns_engine(config, test_feature):
+    from unittest.mock import MagicMock
     from vinisto.engine import VinistoEngine
+    from vinisto.abstract import AbstractEmitter
     from pyknow import KnowledgeEngine
+    emitter = MagicMock(spec=AbstractEmitter)
 
     assert isinstance(
         VinistoEngine(features_list=test_feature, base_context={
-            "rules": [], "final_rules": []}),
+            "rules": [], "final_rules": []}, emitter=emitter),
         KnowledgeEngine)
 
 
@@ -15,7 +18,6 @@ def test_get_rules_returns_two_ands(config, test_feature):
     """
     Given the two features in test_feature we receive two ands
     """
-    from unittest.mock import patch
     from vinisto.engine import VinistoEngine
     from pyknow import AND, Rule
 

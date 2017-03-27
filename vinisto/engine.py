@@ -11,13 +11,19 @@ from behave.runner import Runner, Context
 from pyknow import KnowledgeEngine
 
 from vinisto.facts import Sensor
+from .abstract import AbstractEmitter
 
 
 class VinistoKE(KnowledgeEngine):
     """
     Custom KnowledgeEngine
     """
-    def update_sensors(self, sensors):
+    def __init__(self, *args, **kwargs):
+        self.emitter = kwargs.pop('emitter')
+        assert isinstance(self.emitter, AbstractEmitter)
+        super().__init__(*args, **kwargs)
+
+    def receive(self, sensors):
         """
         Update sensor values:
 
@@ -42,6 +48,12 @@ class VinistoKE(KnowledgeEngine):
         self.declare(*(Sensor(name=k, value=v) for k, v in sensors.items()))
         self.run()
 
+    def emit(self, sensor, value):
+        """
+        Emit using given emitter
+        """
+        self.emitter.emit(sensor, value)
+
 
 class VinistoEngine:
     """
@@ -50,6 +62,9 @@ class VinistoEngine:
     # pylint: disable=too-few-public-methods
 
     def __new__(cls, **kwargs):
+        emitter = kwargs.pop("emitter")
+        assert isinstance(emitter, AbstractEmitter)
+
         def _random_name():
             return ''.join(choice(string.ascii_uppercase) for _ in range(10))
 
@@ -57,7 +72,7 @@ class VinistoEngine:
             "Engine", (VinistoKE,),
             {_random_name(): rule for rule in cls.get_rules(**kwargs)})
 
-        engine = engine_cls()
+        engine = engine_cls(emitter=emitter)
         engine.reset()
         return engine
 

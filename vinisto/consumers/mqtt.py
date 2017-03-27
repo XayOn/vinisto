@@ -24,7 +24,7 @@ def mqtt_consumer(features):
                    "mqtt_template": config.get('main', 'mqtt_template')}
         client.engine = VinistoEngine(features=features, context=context)
         client.engine.mqtt = client
-        client.on_message = lambda c, _, msg: c.engine.update_sensors(
+        client.on_message = lambda c, _, msg: c.engine.receive(
             json.loads(msg.payload.decode('utf-8')))
         client.on_disconnect = lambda c, u, r: c.reconnect()
 

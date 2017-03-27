@@ -15,6 +15,9 @@ class BehaveMQTT(metaclass=ExecutorAdapter):
     """
     # pylint: disable=too-few-public-methods
 
+    def __init__(self, emitter):
+        self.emitter = emitter
+
     template = _("""Feature: Voice recognition
       Scenario: I received a voice command
            When I receive a voice command
@@ -26,6 +29,7 @@ class BehaveMQTT(metaclass=ExecutorAdapter):
         """
         feature = self.template.format(phrase)
         engine = vinisto.engine.VinistoEngine(
+            emitter=self.emitter,
             features_list=[feature],
             base_context={"rules": [], "final_rules": []})
         return engine.run()

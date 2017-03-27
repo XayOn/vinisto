@@ -34,11 +34,11 @@ def sensor_has_value_t(context, sensor, value):
 
 @then(_("set {sensor} to {value}"))
 def set_sensor_value(context, sensor, value):
-    """ Set a sensor to a specific value in mqtt """
+    """ Set a sensor to a specific value """
     sensor = sensor.replace(' ', '_')
 
     def _set_sensor_value(engine):
-        engine.mqtt.send(context.mqtt_template.format(sensor), value)
+        engine.emit(sensor, value)
 
     rules = context.rules.copy()
     context.rules.clear()
