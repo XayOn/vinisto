@@ -4,12 +4,14 @@ Vinisto
 
 from gettext import gettext as _
 from random import choice
+from copy import deepcopy
 import json
 import string
 
 import paho.mqtt.client as mqtt
 
 # pylint: disable=no-name-in-module
+from behave.step_registry import registry as the_step_registry
 from behave import when, then
 from behave.configuration import Configuration
 from behave.parser import parse_feature
@@ -61,16 +63,17 @@ def set_sensor_value(context, sensor, value):
     context.final_rules.append(Rule(AND(*rules))(_set_sensor_value))
 
 
-def get_rules(features_list):
+def get_rules(features_list, base_context):
     """ Execute gherkins and return rules """
 
     runner = Runner(Configuration())
+    print(the_step_registry)
 
     for data in features_list:
+        context_copy = deepcopy(base_context)
         context = Context(runner)
-        context.rules = []
-        context.final_rules = []
-        context.mqtt_template = config.get('main', 'mqtt_template')
+        for key, value in context_copy.items():
+            setattr(context, key, value)
         runner.context = context
         parse_feature(data, None, None).run(runner)
         if runner.undefined_steps:
@@ -78,7 +81,7 @@ def get_rules(features_list):
         yield from context.final_rules
 
 
-def get_knowledge_engine(features):
+def get_knowledge_engine(features, base_context):
     """
     Get a knowledge engine built upon a features directory
     """
@@ -86,7 +89,7 @@ def get_knowledge_engine(features):
     def _random_name():
         return ''.join(choice(string.ascii_uppercase) for _ in range(10))
 
-    rules = get_rules(features)
+    rules = get_rules(features, base_context)
     engine_cls = type(
         "Engine", (KnowledgeEngine,), {_random_name(): rule for rule in rules})
     engine = engine_cls()
@@ -125,8 +128,11 @@ def main(features):
     Connect the mqtt server
     """
 
+    context = {"rules": [], "final_rules": [],
+               "mqtt_template": config.get('main', 'mqtt_template')}
+
     client = mqtt.Client("automation")
-    client.engine = get_knowledge_engine(features)
+    client.engine = get_knowledge_engine(features, context)
     client.engine.mqtt = client
     client.on_message = on_message
     client.on_disconnect = lambda c, u, r: c.reconnect()

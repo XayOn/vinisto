@@ -22,19 +22,25 @@ class SpeechRecognition(metaclass=VoiceAdapter):
         self.recognizer = speech.Recognizer()
         speech_config = dict(config.items("speech"))
         self.microphone = speech_config.pop("microphone_name", "pulse")
-        self.recognition_class = speech_config.pop("recognizer", "pulse")
+        self.recognition_class = speech_config.pop("recognizer", "google")
         self.config = speech_config
         self.source = speech.Microphone(device_index=self.mic_id)
 
     @property
     def microphones(self):
+        """ Return a list of available microphones on the system """
         return speech.Microphone.list_microphone_names()
 
+    @property
     def mic_id(self):
         """ Return the selected microphone ID """
         matching = [idx for idx, name in enumerate(self.microphones)
                     if name == self.microphone]
-        return matching.pop()
+        try:
+            return matching.pop()
+        except IndexError:
+            raise Exception("No microphone matching given id %s, %s"
+                            % (self.microphone, self.microphones))
 
     @property
     def recognize(self):

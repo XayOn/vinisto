@@ -10,10 +10,6 @@ class VoiceAdapter(abc.ABCMeta):
     Main voice adapter base class
     """
 
-    @abc.abstractmethod
-    def __init__(cls):
-        super().__init__()
-
     def __iter__(cls):
         return cls
 

@@ -20,7 +20,7 @@ def config():
     config_mock.set("main", "", "")
     config_mock.add_section("speech")
     config_mock.set("speech", "microphone_name", "basic_microphone")
-    return patch('vinisto.config', return_value=config_mock)
+    return config_mock
 
 
 @pytest.fixture
