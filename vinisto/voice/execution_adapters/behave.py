@@ -1,15 +1,11 @@
-"""
-Behave+MQTT adapter. Uses the same logic as main vinisto module
-to send data to an MQTT server using voice commands.
-
-"""
+""" Behave adapter. Uses the same logic as main vinisto module """
 
 from gettext import gettext as _
 from vinisto.voice.abstract import ExecutorAdapter
 import vinisto
 
 
-class BehaveMQTT(metaclass=ExecutorAdapter):
+class Behave(metaclass=ExecutorAdapter):
     """
     Execution adaptor base class
     """
