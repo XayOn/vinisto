@@ -6,7 +6,7 @@ from gettext import gettext as _
 # pylint: disable=no-name-in-module
 from behave import when, then
 from pyknow import Rule, AND, L, P
-from vinisto.facts import Sensor
+from vinisto.engine.facts import Sensor
 
 
 @when(_("sensor {sensor} has value {value}"))

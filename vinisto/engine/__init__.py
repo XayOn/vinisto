@@ -10,8 +10,8 @@ from behave.parser import parse_feature
 from behave.runner import Runner, Context
 from pyknow import KnowledgeEngine
 
-from vinisto.facts import Sensor
-from .abstract import AbstractEmitter
+from vinisto.engine.facts import Sensor
+from vinisto.abstract import AbstractEmitter
 
 
 class VinistoKE(KnowledgeEngine):
