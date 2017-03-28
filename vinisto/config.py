@@ -8,3 +8,4 @@ Configuration management
 import configparser
 
 config = configparser.ConfigParser()
+config.read('~/.vinisto.conf')

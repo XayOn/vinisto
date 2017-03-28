@@ -6,14 +6,21 @@ Vinisto is a rules engine applied to home automation in a more-human form.
 This means it's a domotic engine that:
 
 - Has human-readable rules
-- Is able to interact with MQTT devices
+- Is able to interact with any kind of devices
+- Has a comprehensible web interface
 
 
-Right now, only our own mqtt device syntax with a generic mqtt branch to listen on is supported,
-but in the not-so-far future we might support other device types (PRs and tickets welcome)
+That is acomplished with the following:
 
+- A library that converts a series of features in input for a KE.
+  Also, it has an emitter and a receiver.
+- Models for features and sensors
+- A rest receiver
+- An API that acts both as a rest receiver and features manager
+- External data providers to receive and emit data to receiver/emitter
+- Web interface
 
-This means that given a series of files in the form::
+This means that given a series of features in the form::
 
    # language: en
 
@@ -29,7 +36,7 @@ This means that given a series of files in the form::
          And the sensor temperature_living has a value > 20
         Then set the sensor thermostat value to 0
 
-And creates a knowledge engine with that rules, listening on MQTT changes,
+And creates a knowledge engine with that rules, liste,
 that act upon them and, when the rules matches, sends the requested MQTT signal.
 
 How to contribute

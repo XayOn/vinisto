@@ -6,6 +6,7 @@ from gettext import gettext as _
 # pylint: disable=no-name-in-module
 from behave import when, then
 from pyknow import Rule, AND, L, P
+from vinisto.models import SensorModel
 from vinisto.engine.facts import Sensor
 
 
@@ -35,10 +36,12 @@ def sensor_has_value_t(context, sensor, value):
 @then(_("set {sensor} to {value}"))
 def set_sensor_value(context, sensor, value):
     """ Set a sensor to a specific value """
-    sensor = sensor.replace(' ', '_')
+    sensor = SensorModel.get(name=sensor.replace(' ', '_'))
 
     def _set_sensor_value(engine):
-        engine.emit(sensor, value)
+        sensor.value = value
+        sensor.save()
+        sensor.remote_update()
 
     rules = context.rules.copy()
     context.rules.clear()

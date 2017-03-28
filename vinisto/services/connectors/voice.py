@@ -1,10 +1,12 @@
 """
-Speech recognition
+Vinisto voice module, using different voice and execution adapters
 """
 
 import speech_recognition as speech
-from vinisto.voice.abstract import VoiceAdapter
+from vinisto.services import RestConnector
+from vinisto.services.voice.abstract import VoiceAdapter
 from vinisto.config import config
+import gettext as _
 
 
 class SpeechRecognition(metaclass=VoiceAdapter):
@@ -62,3 +64,35 @@ class SpeechRecognition(metaclass=VoiceAdapter):
                     self.recognizer.listen(source), **self.config)
         except Exception:
             raise StopIteration
+
+
+class VinistoVoice:
+    """
+    Main class
+    """
+    template = _("""Feature: voice recognition
+                    Scenario: I received a voice command
+                              When I receive a voice command
+                              Then {}""")
+
+    # pylint: disable=too-few-public-methods
+    def __init__(self, voice_adapter, executor_adapters):
+        assert isinstance(voice_adapter, SpeechRecognition)
+        self.voice_adapter = voice_adapter
+
+    async def run(self):
+        """
+        Main loop.
+
+        If we actually have a StopIteration from the voice adapter,
+        we stop.
+
+        We can only have one voice adapter at a time, but multiple
+        executor adapters.
+
+        Be careful, if your executor adapters react to the same
+        things, there can be repeated executions.
+        """
+        async for voice_input in self.voice_adapter:
+            for executor_adapter in self.executor_adapters:
+                RestConnector.execute_step(self.template.format(voice_input))

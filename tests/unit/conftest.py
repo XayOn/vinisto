@@ -11,7 +11,6 @@ def config():
     Mocked config
     """
 
-    from unittest.mock import patch
     from configparser import ConfigParser
 
     config_mock = ConfigParser()
@@ -20,6 +19,9 @@ def config():
     config_mock.set("main", "", "")
     config_mock.add_section("speech")
     config_mock.set("speech", "microphone_name", "basic_microphone")
+    config_mock.add_section("api")
+    config_mock.set("api", "ip", "127.0.0.1")
+    config_mock.set("api", "port", "8080")
     return config_mock
 
 
