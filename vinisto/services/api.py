@@ -62,16 +62,6 @@ class VinistoSensorsConsumerView(BasicREST):
 
     model = SensorModel
 
-    @lru_cache()
-    @property
-    def engine(self):
-        """ Return a freshly produced vinisto engine. """
-        return VinistoEngine(
-            base_context={"final_rules": [], "rules": []},
-            features_list=[a.base.format(a.variables) for a in
-                           FeatureModel.select()],
-            emitter=VinistoRestProducer)
-
     async def post(self):
         """ Received a sensor value, save it in the db and exec the KE """
         super().post()
@@ -88,6 +78,13 @@ def vinisto_rest_consumer():
     """
     Vinisto REST consumer
     """
+    engine = VinistoEngine(
+        base_context={"final_rules": [], "rules": []},
+        features_list=[a.base.format(a.variables) for a in
+                       FeatureModel.select()],
+        emitter=VinistoRestProducer)
+    VinistoFeaturesConsumerView.engine = engine
+
     app = web.Application()
     app.router.add('/feature', VinistoFeaturesConsumerView)
     app.router.add('/sensor', VinistoSensorsConsumerView)
