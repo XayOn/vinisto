@@ -5,7 +5,6 @@ Models
 import json
 import peewee
 import requests
-from vinisto.engine import VinistoEngine
 
 DATABASE = peewee.SqliteDatabase("temp")
 
@@ -24,6 +23,7 @@ class Feature(peewee.Model):
         """
         Return engine
         """
+        from vinisto.engine import VinistoEngine
         return VinistoEngine(
             base_context={"final_rules": [], "rules": []},
             features_list=[a.text for a in select])
