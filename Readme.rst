@@ -36,8 +36,13 @@ This means that given a series of features in the form::
          And the sensor temperature_living has a value > 20
         Then set the sensor thermostat value to 0
 
-And creates a knowledge engine with that rules, liste,
-that act upon them and, when the rules matches, sends the requested MQTT signal.
+And creates a knowledge engine with that rules,
+acts upon them and, when the rules matches, sends the requested signal.
+
+Note that the core only speaks HTTP, meaning you'll have to implement your own
+connectors from REST to whatever-you-need and configure the sensors to point
+to those. At least until I have a few important ones running (PRs implementing
+those are welcome)
 
 How to contribute
 -----------------
