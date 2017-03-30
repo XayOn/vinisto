@@ -2,28 +2,29 @@
 Connector to vinisto REST API
 """
 
-import json
+from potion_client import Client
 from vinisto.config import config
 import requests
 
 
 class RestConnector:
-    """
-    Rest connector to main api
-    """
-    url = "http://{}:{}/{{}}".format(
-        config.get("api", "ip"), config.get("api", "port"))
+    """ Rest connector to main api """
+
+    def __init__(self):
+        self.url = "http://{}:{}/".format(config.get("api", "ip"),
+                                     config.get("api", "port"))
+        self.client = Client(url)
 
     @staticmethod
-    def send_messages(msg):
-        """ Send sensors messages to vinisto API """
-        return requests.post(
-            RestConnector.url.format('sensor'),
-            data={k: v for k, v in json.loads(msg).items()})
+    def update_sensors(sensors):
+        """ Update sensor values """
+        for name, value in sensors:
+            sensor = self.client.User.first(where={"name": name})
+            sensor.value = value
+            sensor.save()
 
     @staticmethod
     def execute_step(msg):
         """ Directly call for a step execution """
-        return requests.post(
-            RestConnector.url.format('execute_step'),
-            data={"step": msg})
+        return requests.post("{}{}".format(self.url, '/execute_step'),
+                             data={"step": msg})

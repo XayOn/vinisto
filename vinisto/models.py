@@ -10,11 +10,10 @@ from vinisto.engine import VinistoEngine
 DATABASE = peewee.SqliteDatabase("temp")
 
 
-class FeatureModel(peewee.Model):
+class Feature(peewee.Model):
     """ Feature Model """
 
-    base = peewee.TextField()
-    variables = peewee.TextField()
+    text = peewee.TextField()
 
     class Meta:
         # pylint: disable=missing-docstring, too-few-public-methods
@@ -27,20 +26,19 @@ class FeatureModel(peewee.Model):
         """
         return VinistoEngine(
             base_context={"final_rules": [], "rules": []},
-            features_list=[a.base.format(**json.loads(a.variables))
-                           for a in select])
+            features_list=[a.text for a in select])
 
 
-class SensorModel(peewee.Model):
+class Sensor(peewee.Model):
     """ Sensor Model """
 
     update_types = ["button", "slider"]
     name = peewee.TextField()
     type = peewee.TextField()
-    value = peewee.TextField()
-    http_verb = peewee.TextField()
-    url_template = peewee.TextField()
-    data_template = peewee.TextField()
+    value = peewee.TextField(null=True)
+    http_verb = peewee.TextField(null=True)
+    url_template = peewee.TextField(null=True)
+    data_template = peewee.TextField(null=True)
 
     class Meta:
         # pylint: disable=missing-docstring, too-few-public-methods
@@ -53,4 +51,4 @@ class SensorModel(peewee.Model):
                 name=self.name, value=self.value)))
 
 
-DATABASE.create_tables([SensorModel, FeatureModel], safe=True)
+DATABASE.create_tables([Sensor, Feature], safe=True)

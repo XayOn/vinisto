@@ -10,8 +10,7 @@ from behave.parser import parse_feature
 from behave.runner import Runner, Context
 from pyknow import KnowledgeEngine
 
-from vinisto.engine.facts import Sensor
-from vinisto.abstract import AbstractEmitter
+from vinisto.engine.facts import SensorFact
 
 
 class VinistoKE(KnowledgeEngine):
@@ -42,8 +41,9 @@ class VinistoKE(KnowledgeEngine):
 
         assert isinstance(sensors, dict)
         for key, _ in sensors.items():
-            self.retract_matching(Sensor(name=key))
-        self.declare(*(Sensor(name=k, value=v) for k, v in sensors.items()))
+            self.retract_matching(SensorFact(name=key))
+        self.declare(
+            *(SensorFact(name=k, value=v) for k, v in sensors.items()))
         self.run()
 
 
@@ -77,7 +77,7 @@ class VinistoEngine:
             for key, value in context_copy.items():
                 setattr(context, key, value)
             runner.context = context
-            parse_feature(data, None, None).run(runner)
+            parse_feature(data.strip(), None, None).run(runner)
             if runner.undefined_steps:
                 raise Exception("Undefined {}".format(runner.undefined_steps))
             yield from context.final_rules

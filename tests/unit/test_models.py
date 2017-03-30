@@ -2,29 +2,28 @@ import pytest
 
 
 def test_feature_has_all_attrs():
-    from vinisto.models import FeatureModel
-    assert hasattr(FeatureModel, "base")
-    assert hasattr(FeatureModel, "variables")
+    from vinisto.models import Feature
+    assert hasattr(Feature, "text")
 
 
 def test_sensor_has_all_attrs():
-    from vinisto.models import SensorModel
+    from vinisto.models import Sensor
 
-    assert hasattr(SensorModel, "name")
-    assert hasattr(SensorModel, "value")
-    assert hasattr(SensorModel, "type")
-    assert hasattr(SensorModel, "http_verb")
-    assert hasattr(SensorModel, "url_template")
-    assert hasattr(SensorModel, "data_template")
-    assert hasattr(SensorModel, "update_types")
+    assert hasattr(Sensor, "name")
+    assert hasattr(Sensor, "value")
+    assert hasattr(Sensor, "type")
+    assert hasattr(Sensor, "http_verb")
+    assert hasattr(Sensor, "url_template")
+    assert hasattr(Sensor, "data_template")
+    assert hasattr(Sensor, "update_types")
 
 
 @pytest.mark.parametrize("method", ("get", "post"))
 def test_remote_update(method):
     from unittest.mock import patch
     with patch("requests.{}".format(method)) as mock:
-        from vinisto.models import SensorModel
-        sensor, _ = SensorModel.get_or_create(
+        from vinisto.models import Sensor
+        sensor, _ = Sensor.get_or_create(
             type="button",
             name="test", value="1", http_verb=method,
             url_template="http://localhost/{name}/{value}",
@@ -37,23 +36,15 @@ def test_remote_update(method):
 
 
 def test_get_engine_returns_engine():
-    import json
     from pyknow import KnowledgeEngine
-    from vinisto.models import FeatureModel
-    from vinisto.abstract import AbstractEmitter
+    from vinisto.models import Feature
 
-    class Emitter(metaclass=AbstractEmitter):
-        def emit(self, *args):
-            pass
-
-    base = """
+    text = """
     Feature: Foo
     Scenario: If there is cold, turn the heat on
-              When I receive {command}
-              Then set sensor a to {value}
+              Given I have a sensor a
+              When I receive a voice command
+              Then set a to 8
     """
-    variables = json.dumps({"command": "a voice command", "value": "8"})
-    FeatureModel.get_or_create(base=base, variables=variables)
-    assert isinstance(
-        FeatureModel.get_engine(FeatureModel.select(), Emitter()),
-        KnowledgeEngine)
+    Feature.get_or_create(text=text)
+    assert isinstance(Feature.get_engine(Feature.select()), KnowledgeEngine)

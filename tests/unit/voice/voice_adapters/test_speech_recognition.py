@@ -1,12 +1,8 @@
 def test_speechrecognition_mic_id(config):
-    import vinisto.services.voice.voice_adapters.vinisto_speech_recognition as sr
     from unittest.mock import patch, MagicMock
-
-    with patch("vinisto.services.voice.voice_adapters."
-               "vinisto_speech_recognition.config",
-               return_value=config) as cmock:
-        with patch("vinisto.services.voice.voice_adapters.vinisto_speech_"
-                   "recognition.speech") as mock:
+    with patch("vinisto.services.connectors.voice.config", return_value=config) as cmock:
+        import vinisto.services.connectors.voice as sr
+        with patch("vinisto.services.connectors.voice.speech") as mock:
             cmock.items = MagicMock(
                 return_value={"microphone_name": "basic_microphone"})
             mock.Microphone.list_microphone_names = MagicMock(return_value=[
@@ -19,16 +15,12 @@ def test_speechrecognition_mic_id(config):
 
 
 def test_speechrecognition_mic_id_defaults_as_pulse(config):
-    import vinisto.services.voice.voice_adapters.vinisto_speech_recognition as sr
     from unittest.mock import patch, MagicMock
 
-    with patch("vinisto.services.voice.voice_adapters."
-               "vinisto_speech_recognition.config",
-               return_value=config) as cmock:
-        with patch("vinisto.services.voice.voice_adapters.vinisto_speech_"
-                   "recognition.speech") as mock:
-            cmock.items = MagicMock(
-                return_value={})
+    with patch("vinisto.services.connectors.voice.config", return_value=config) as cmock:
+        import vinisto.services.connectors.voice as sr
+        with patch("vinisto.services.connectors.voice.speech") as mock:
+
             mock.Microphone.list_microphone_names = MagicMock(return_value=[
                 "basic_microphone", "pulse"])
 
