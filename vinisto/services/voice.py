@@ -2,7 +2,6 @@
 Vinisto voice module, using different voice and execution adapters
 """
 
-from gettext import gettext as _
 import speech_recognition as speech
 from vinisto.services import RestConnector
 from vinisto.config import config
@@ -70,10 +69,6 @@ class VinistoVoice:
     Main class
     """
     # pylint: disable=too-few-public-methods
-    template = _("""Feature: voice recognition
-                    Scenario: I received a voice command
-                              When I receive a voice command
-                              Then {}""")
 
     def __init__(self):
         self.voice_adapter = SpeechRecognition()
@@ -93,4 +88,4 @@ class VinistoVoice:
         things, there can be repeated executions.
         """
         async for voice_input in self.voice_adapter:
-            self.connector.execute_step(self.template.format(voice_input))
+            self.connector.execute_then(self.template.format(voice_input))

@@ -2,9 +2,9 @@
 Connector to vinisto REST API
 """
 
+from gettext import gettext as _
 from potion_client import Client
 from vinisto.config import config
-import requests
 
 
 class RestConnector:
@@ -12,19 +12,27 @@ class RestConnector:
 
     def __init__(self):
         self.url = "http://{}:{}/".format(config.get("api", "ip"),
-                                     config.get("api", "port"))
-        self.client = Client(url)
+                                          config.get("api", "port"))
+        self.client = Client(self.url)
+        self.template = _("""Feature: voice recognition
+                             Scenario: I received a voice command
+                                       When I receive a voice command
+                                       Then {}""")
 
-    @staticmethod
-    def update_sensors(sensors):
+    def update_sensors(self, sensors):
         """ Update sensor values """
         for name, value in sensors:
             sensor = self.client.User.first(where={"name": name})
             sensor.value = value
             sensor.save()
 
-    @staticmethod
-    def execute_step(msg):
+    def execute_then(self, step):
         """ Directly call for a step execution """
-        return requests.post("{}{}".format(self.url, '/execute_step'),
-                             data={"step": msg})
+        feature = self.template.format(step)
+
+        try:
+            feat = self.client.Feature.create(text=feature)
+        except:
+            feat = self.client.Feature.first(text=feature)
+
+        feat.execute()
