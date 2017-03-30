@@ -1,5 +1,6 @@
 """ Basic API """
 
+import os
 from vinisto.models import Feature
 from vinisto.models import Sensor
 from flask_potion import Api, ModelResource, signals, fields
@@ -8,15 +9,16 @@ from flask_potion.contrib.peewee import PeeweeManager
 from flask import Flask
 
 APP = Flask(__name__)
+TEMPLATES_DIR = os.path.join(os.path.dirname(__file__), 'templates')
 
 
 @APP.route("/")
-def index(request):
-    return open('./templates/index.html').read()
+def index():
+    return open(os.path.join(TEMPLATES_DIR, 'index.html')).read()
 
 
 class FeatureResource(ModelResource):
-    @ItemRoute.get('/execute')
+    @ItemRoute.GET('/execute')
     def execute(self, feature) -> fields.Boolean():
         Feature.get_engine([feature]).run()
         return True
