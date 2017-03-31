@@ -6,7 +6,7 @@ Vinisto Knowledge Engine.
 
 import string
 from copy import deepcopy
-from gettext import gettext as _
+from gettext import gettext
 from random import choice
 
 from behave import when, then, given
@@ -22,35 +22,71 @@ from vinisto.models import Sensor
 
 
 class SensorFact(Fact):
+    # pylint: disable=missing-docstring
     pass
 
 
-@given(_("I have a sensor {name}"))
-def add_sensor(context, name):
+@given(gettext("I have a sensor {name}"))
+def add_sensor(_, name):
+    """ Add a sensor to db """
     Sensor.get_or_create(name=name, type="sensor")
 
 
-@given(_("I have a {type} {name} that reacts on {http_verb}"
-         " to {url_template} with {data_template}"))
-def add_reactor(context, name, type, http_verb, url_template, data_template):
+@given(gettext("I have a {type_} \"{name}\" that reacts on \"{http_verb}\""
+               " to \"{url_template}\""))
+@given(gettext("I have a {type_} \"{name}\" that reacts on \"{http_verb}\""
+               " to \"{url_template}\" with \"{data_template}\""))
+def add_reactor(context, name, type_, http_verb, url_template,
+                data_template=""):
     """ Add a reactor-type sensor """
-    Sensor.get_or_create(name=name, type=type, http_verb=http_verb,
-                         url_template=url_template,
-                         data_template=data_template)
+    try:
+        sensor, _ = Sensor.get_or_create(name=name)
+        sensor.reacts = True
+        sensor.type = type_
+        sensor.http_verb = http_verb
+        sensor.url_template = url_template
+        sensor.data_template = data_template
+        sensor.save()
+    except Exception as excp:
+        context.exceptions.append(excp)
 
 
-@when(_("sensor {sensor} has value {value}"))
+@given(gettext("I have a {type_} \"{name}\" that does not react"))
+def add_nonreactor(_, type_, name):
+    """ Add a not-reactive sensor """
+    Sensor.get_or_create(name=name, type=type_, reacts=False)
+
+
+@when(gettext("sensor {sensor} has value {value}"))
 def sensor_has_value(context, sensor, value):
     """ When we receive a fact that the sensor has a specific value """
     sensor = sensor.replace(' ', '_')
     context.rules.append(SensorFact(name=sensor, value=L(value)))
 
 
-@when(_("sensor {sensor} has a value {value}"))
+@when(gettext("sensor {sensor} has a value {value}"))
 def sensor_has_value_t(context, sensor, value):
     """
     When we receive a fact that the sensor has a value that
     evaluates the next expression...
+    """
+    sensor = sensor.replace(' ', '_')
+
+    # pylint:disable=exec-used, unused-argument
+
+    def test(val):
+        """ test """
+        if val and val.isnumeric():
+            val = float(val)
+        exec("result=val {}".format(value))
+        return locals()["result"]
+    context.rules.append(SensorFact(name=sensor, value=P(test)))
+
+
+@when(gettext("sensor {sensor} is off"))
+def sensor_is_off(context, sensor, value):
+    """
+    Sensor is off
     """
     sensor = sensor.replace(' ', '_')
 
@@ -63,14 +99,14 @@ def sensor_has_value_t(context, sensor, value):
     context.rules.append(SensorFact(name=sensor, value=P(test)))
 
 
-@then(_("set {sensor} to {value}"))
+@then(gettext("set {sensor} to {value}"))
 def set_sensor_value(context, sensor, value):
     """
     Set a sensor to a specific value.
     """
     sensor = Sensor.get(name=sensor.replace(' ', '_'))
 
-    def _set_sensor_value(engine):
+    def _set_sensor_value(_):
         sensor.value = value
         sensor.save()
         sensor.remote_update()
@@ -80,8 +116,8 @@ def set_sensor_value(context, sensor, value):
     context.final_rules.append(Rule(AND(*rules))(_set_sensor_value))
 
 
-@when(_("I receive a voice command"))
-def voice_command(context):
+@when(gettext("I receive a voice command"))
+def voice_command(_):
     """ Dummy step for voice commands """
     pass
 
@@ -93,30 +129,17 @@ class VinistoKE(KnowledgeEngine):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def receive(self, sensors):
+    def receive(self, *args):
         """
-        Update sensor values:
-
-        - Retract previous values of the same sensor.
-        - Declare new ones
-
-        This is probably a bad idea, since already-declared
-        things will trigger changes on each message.
-
-        Wich means... don't touch things manually while using vinisto.
-        And have all your actions have an state (for example, use "turn on"
-        instead of "toggle").
-
-        This is kind of a problem since that means I can't turn the tv with
-        this method, unless I make some kind of internal state for
-        stateless triggers...
+        We have received changes in sensors.
+        Reset and re-declare all facts.
+        TODO: retract_matching isn't working as expected and I dont have time
+              to update to pyknow 1.0.0 right now, that's why this reads
+              everything again. Sorry.
         """
-
-        assert isinstance(sensors, dict)
-        for key, a in sensors.items():
-            self.retract_matching(SensorFact(name=key))
-        self.declare(
-            *(SensorFact(name=k, value=v) for k, v in sensors.items()))
+        sens = Sensor.select()
+        self.reset()
+        self.declare(*(SensorFact(name=k.name, value=k.value) for k in sens))
         self.run()
 
 
@@ -150,7 +173,17 @@ class VinistoEngine:
             for key, value in context_copy.items():
                 setattr(context, key, value)
             runner.context = context
-            parse_feature(data.strip(), None, None).run(runner)
-            if runner.undefined_steps:
-                raise Exception("Undefined {}".format(runner.undefined_steps))
-            yield from context.final_rules
+            context.exceptions = []
+            try:
+                parse_feature(data.strip(), None, None).run(runner)
+                if runner.undefined_steps:
+                    raise Exception("Undefined {}".format(
+                        runner.undefined_steps))
+                print(context.exceptions)
+                if context.exceptions:
+                    raise Exception(context.exceptions)
+                yield from context.final_rules
+                # pylint: disable=bare-except
+                # TODO: Handle exceptions
+            except Exception as err:
+                print(err)

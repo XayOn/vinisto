@@ -38,6 +38,7 @@ class Sensor(peewee.Model):
     value = peewee.TextField(null=True)
     http_verb = peewee.TextField(null=True)
     url_template = peewee.TextField(null=True)
+    reacts = peewee.BooleanField(null=True)
     data_template = peewee.TextField(null=True)
 
     class Meta:
@@ -45,10 +46,25 @@ class Sensor(peewee.Model):
         database = DATABASE
 
     def remote_update(self):
-        return getattr(requests, self.http_verb)(
-            self.url_template.format(name=self.name, value=self.value),
-            data=json.loads(self.data_template.format(
-                name=self.name, value=self.value)))
+        """
+        If this is a reactor against a remote REST API, launch the
+        request.
+        """
+        # pylint: disable=no-member
+        if not self.reacts:
+            return False
+
+        data = {}
+        if self.data_template:
+            data = json.loads(self.data_template.format(
+                    name=self.name, value=self.value))
+
+        try:
+            return getattr(requests, self.http_verb)(
+                self.url_template.format(name=self.name, value=self.value),
+                data=data)
+        except Exception as err:
+            print(err)
 
 
 DATABASE.create_tables([Sensor, Feature], safe=True)

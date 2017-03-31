@@ -11,8 +11,8 @@ class RestConnector:
     """ Rest connector to main api """
 
     def __init__(self):
-        self.url = "http://{}:{}/".format(config.get("api", "ip"),
-                                          config.get("api", "port"))
+        self.url = "http://{}:{}".format(config.get("api", "ip"),
+                                         config.get("api", "port"))
         self.client = Client(self.url)
         self.template = _("""Feature: voice recognition
                              Scenario: I received a voice command
@@ -21,9 +21,9 @@ class RestConnector:
 
     def update_sensors(self, sensors):
         """ Update sensor values """
-        for name, value in sensors:
-            sensor = self.client.User.first(where={"name": name})
-            sensor.value = value
+        for name, value in sensors.items():
+            sensor = self.client.Sensor.first(where={"name": name})
+            sensor.value = str(value)
             sensor.save()
 
     def execute_then(self, step):

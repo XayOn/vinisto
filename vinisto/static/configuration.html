@@ -10,12 +10,16 @@
     <body>
         <div class=container>
              <div id="features">
-                <h2>Configuration</h2>
+                <header>
+                     <h2><a href="/static/index.html">Vinisto</a></h2>
+                     <h1 style="position:absolute; top:0px; right:10px"><a href="/static/configuration.html">&#x2699;</a></h1>
+                </header>
                 <form class="form" onsubmit="return false;">
                 <button class="btn btn-large" v-on:click="add_feature">Add sentence</button>
                 </form>
 
-                <textarea class="form-control" v-on:keyUp="update_feature"
+                <textarea class="form-control"
+                          v-on:keyUp="update_feature"
                           v-model="item.text"
                           v-model.lazy="item.text"
                           v-bind:data-uri="item.$uri"

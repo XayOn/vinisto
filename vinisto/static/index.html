@@ -10,8 +10,10 @@
     <body>
         <div class=container>
              <div id="sensors">
-                <h2>Vinisto</h2>
-                <h1 style="position:absolute; top:0px; right:10px"><a href="/static/configuration.html">&#x2699;</a></h1>
+                <header>
+                     <h2><a href="/static/index.html">Vinisto</a></h2>
+                     <h1 style="position:absolute; top:0px; right:10px"><a href="/static/configuration.html">&#x2699;</a></h1>
+                </header>
                 <div class="form-control" v-on:keyUp="update_sensor"
                           v-model="item.value"
                           v-model.lazy="item.value"

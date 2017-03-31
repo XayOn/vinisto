@@ -1,5 +1,6 @@
 """ Basic API """
 
+import os
 import configparser
 from vinisto.models import Feature
 from vinisto.models import Sensor
@@ -14,7 +15,7 @@ from flask import Flask
 APP = Flask(__name__)
 
 config = configparser.ConfigParser()
-config.read('~/.vinisto.conf')
+config.read(os.path.expanduser('~/.vinisto.conf'))
 
 
 class FeatureResource(ModelResource):
@@ -42,7 +43,7 @@ class SensorResource(ModelResource):
 def sensor_updated(_, item, changes):
     """ Run the KE on sensor update if the value has changed """
     if "value" in changes.keys():
-        APP.config['engine'].receive({item.name, item.value})
+        APP.config['engine'].receive({item.name: item.value})
 
 
 def run():
@@ -51,9 +52,4 @@ def run():
     api = Api(APP, default_manager=PeeweeManager)
     api.add_resource(FeatureResource)
     api.add_resource(SensorResource)
-
-    if __name__ == '__main__':
-        APP.run()
-
-if __name__ == "__main__":
-    run()
+    APP.run()
