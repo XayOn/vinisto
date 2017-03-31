@@ -9,45 +9,32 @@
     </head>
     <body>
         <div class=container>
-             <div id="features">
-                <h2>Configuration</h2>
-                <form class="form" onsubmit="return false;">
-                <button class="btn btn-large" v-on:click="add_feature">Add sentence</button>
-                </form>
-
-                <textarea class="form-control" v-on:keyUp="update_feature"
-                          v-model="item.text"
-                          v-model.lazy="item.text"
+             <div id="sensors">
+                <h2>Vinisto</h2>
+                <h1 style="position:absolute; top:0px; right:10px"><a href="/static/configuration.html">&#x2699;</a></h1>
+                <div class="form-control" v-on:keyUp="update_sensor"
+                          v-model="item.value"
+                          v-model.lazy="item.value"
                           v-bind:data-uri="item.$uri"
-                          v-for="item in features">{{ item.text }}</textarea>
+                          v-for="item in sensors">{{item.name}} - {{ item.value }}</div>
              </div>
         </div>
 
         <script>
-            window.data = {"features": []};
+            window.data = {"sensors": []};
 
-            new Vue({el: "#features", data: window.data,
+            new Vue({el: "#sensors", data: window.data,
                 created: function(){
-                    this.update_features();
+                    this.update_sensors();
                 },
                 methods: {
-                    add_feature: function(){
-                        Vue.http.post('/feature', {'text': "# New feature"}).then(
-                            response => {
-                                this.update_features();
-                            });
+                    update_sensor: function(ev){
+                        Vue.http.patch(ev.target.dataset.uri, {"value": ev.target.value});
                     },
-                    update_feature: function(ev){
-                        Vue.http.patch(ev.target.dataset.uri, {"text": ev.target.value});
-                    },
-                    update_features: function(){
-                        Vue.http.get('/feature').then(
-                            response => {
-                                window.setTimeout(this.resize_textareas, 400);
-                                window.data["features"] = response.body;
-                            });
-                    },
-                    resize_textareas: function(){ $("textarea").each(function(a, e){$(e).height(e.scrollHeight);});}
+                    update_sensors: function(){
+                        Vue.http.get('/sensor').then(
+                            response => {window.data["sensors"] = response.body;});
+                    }
                 }
             });
         </script>
