@@ -4,7 +4,7 @@ Vinisto voice module, using different voice and execution adapters
 
 import speech_recognition as speech
 from vinisto.services import RestConnector
-from vinisto.config import config
+from vinisto import config
 
 
 class SpeechRecognition:

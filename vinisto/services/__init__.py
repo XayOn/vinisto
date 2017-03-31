@@ -4,7 +4,7 @@ Connector to vinisto REST API
 
 from gettext import gettext as _
 from potion_client import Client
-from vinisto.config import config
+from vinisto import config
 
 
 class RestConnector:
