@@ -4,3 +4,4 @@ paho-mqtt
 flask
 flask-potion
 potion-client
+aiohttp
