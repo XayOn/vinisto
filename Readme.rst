@@ -53,3 +53,9 @@ you want to support:
 - Device model
 - MQTT json info (if it's not json, the specific format)
 
+Running infrared module
+-----------------------
+
+::
+
+        python -m aiohttp.web -H localhost -P 8080 vinisto.services.infrared:run
