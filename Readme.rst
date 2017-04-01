@@ -2,47 +2,43 @@ Vinisto - Your human-like intelligent home
 -------------------------------------------
 
 
-Vinisto is a rules engine applied to home automation in a more-human form.
-This means it's a domotic engine that:
+Vinisto is a domotic engine made with readability
+(as in easy-to-configure) and flexibility in mind.
 
-- Has human-readable rules
-- Is able to interact with any kind of devices
-- Has a comprehensible web interface
+.. image:: http://ensalada-de-lengua-de-pajaritos.tumblr.com/post/110275840282/the-future-is-already-here-and-it-is-called
 
+This means, that you can specify rules for your home domotic system as
+
+::
+
+   Feature: If there is cold, turn the heater on
+   Scenario:
+     Given I have a sensor temperature_living
+       And I have a button heater that reacts on "get" to "http://heater/?state={value}"
+         And the sensor temperature_living has a value < 15
+        Then turn on heater
+
+   Feature: If there is too hot, turn the heater off
+   Scenario:
+       Given I have a sensor temperature_living
+       And I have a button heater that reacts on "get" to "http://heater/?state={value}"
+         And the sensor temperature_living has a value > 20
+        Then turn off heater
+
+
+Technical part
+--------------
+
+Vinisto uses all the power of an expert system combined with the syntax
+of a great language for defining software features (gherkins).
 
 That is acomplished with the following:
 
-- A library that converts a series of features in input for a KE.
-  Also, it has an emitter and a receiver.
-- Models for features and sensors
-- A rest receiver
-- An API that acts both as a rest receiver and features manager
+- A library that converts a series of features in input for a knowledge engine
+  (http://github.com/buguroo/pyknow)
+- A REST API with simple database models
 - External data providers to receive and emit data to receiver/emitter
-- Web interface
-
-This means that given a series of features in the form::
-
-   # language: en
-
-    Feature: Heating stuff
-
-   Scenario: If there is cold, turn the heat on
-        When the sensor temperature_room has value 15
-         And the sensor temperature_living has a value > 15
-        Then set the sensor thermostat value to 1
-
-   Scenario: If there is too hot, turn heat off
-        When the sensor temperature_room has value 20
-         And the sensor temperature_living has a value > 20
-        Then set the sensor thermostat value to 0
-
-And creates a knowledge engine with that rules,
-acts upon them and, when the rules matches, sends the requested signal.
-
-Note that the core only speaks HTTP, meaning you'll have to implement your own
-connectors from REST to whatever-you-need and configure the sensors to point
-to those. At least until I have a few important ones running (PRs implementing
-those are welcome)
+- An almost-real-time web interface
 
 How to contribute
 -----------------
