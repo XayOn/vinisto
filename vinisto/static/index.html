@@ -28,6 +28,7 @@
             new Vue({el: "#sensors", data: window.data,
                 created: function(){
                     this.update_sensors();
+                    setTimeout(this.update_sensors, 1000);
                 },
                 methods: {
                     update_sensor: function(ev){
@@ -36,6 +37,7 @@
                     update_sensors: function(){
                         Vue.http.get('/sensor').then(
                             response => {window.data["sensors"] = response.body;});
+                        setTimeout(this.update_sensors, 1000);
                     }
                 }
             });
