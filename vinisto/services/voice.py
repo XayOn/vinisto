@@ -5,6 +5,7 @@ Vinisto voice module, using different voice and execution adapters
 import speech_recognition as speech
 from vinisto.services import RestConnector
 from vinisto import config
+import asyncio
 
 
 class SpeechRecognition:
@@ -89,3 +90,10 @@ class VinistoVoice:
         """
         async for voice_input in self.voice_adapter:
             self.connector.execute_then(self.template.format(voice_input))
+
+
+def run():
+    voiceadapter = VinistoVoice()
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(voiceadapter.run())
+    loop.close()
