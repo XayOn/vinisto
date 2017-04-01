@@ -5,7 +5,7 @@ Vinisto - Your human-like intelligent home
 Vinisto is a domotic engine made with readability
 (as in easy-to-configure) and flexibility in mind.
 
-.. image:: http://ensalada-de-lengua-de-pajaritos.tumblr.com/post/110275840282/the-future-is-already-here-and-it-is-called
+.. image:: http://68.media.tumblr.com/bc7f86261bd1d671577d51f82b2d0f6d/tumblr_njdb9pgaXv1sa11jco2_500.gif
 
 This means, that you can specify rules for your home domotic system as
 
