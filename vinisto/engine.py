@@ -40,9 +40,8 @@ def add_reactor(context, name, type_, http_verb, url_template,
                 data_template=""):
     """ Add a reactor-type sensor """
     try:
-        sensor, _ = Sensor.get_or_create(name=name)
+        sensor, _ = Sensor.get_or_create(name=name, type=type_)
         sensor.reacts = True
-        sensor.type = type_
         sensor.http_verb = http_verb
         sensor.url_template = url_template
         sensor.data_template = data_template
@@ -100,10 +99,13 @@ def sensor_is_off(context, sensor, value):
 
 
 @then(gettext("set {sensor} to {value}"))
-def set_sensor_value(context, sensor, value):
+@then(gettext("turn {sensor} {state}"))
+def set_sensor_value(context, sensor, value=False, state=False):
     """
     Set a sensor to a specific value.
     """
+    if state:
+        value = {"on": 1, "off": 0}.get(state)
     sensor = Sensor.get(name=sensor.replace(' ', '_'))
 
     def _set_sensor_value(_):
