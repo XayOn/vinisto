@@ -9,10 +9,8 @@ from copy import deepcopy
 from gettext import gettext
 from random import choice
 
-from behave import when, then, given
-from behave.configuration import Configuration
-from behave.parser import parse_feature
-from behave.runner import Runner, Context
+from fuzzycucumber import when, then, given
+from fuzzycucumber.runner import Runner
 
 from pyknow import KnowledgeEngine
 from pyknow import Rule, AND, L, P
@@ -26,16 +24,18 @@ class SensorFact(Fact):
     pass
 
 
-@given(gettext("I have a sensor {name}"))
+@cucumber.given(gettext("I have a sensor {name}"))
 def add_sensor(_, name):
     """ Add a sensor to db """
     Sensor.get_or_create(name=name, type="sensor")
 
 
-@given(gettext("I have a {type_} \"{name}\" that reacts on \"{http_verb}\""
-               " to \"{url_template}\""))
-@given(gettext("I have a {type_} \"{name}\" that reacts on \"{http_verb}\""
-               " to \"{url_template}\" with \"{data_template}\""))
+@cucumber.given(gettext(
+    "I have a {type_} \"{name}\" that reacts on \"{http_verb}\""
+    " to \"{url_template}\""))
+@cucumber.given(gettext(
+    "I have a {type_} \"{name}\" that reacts on \"{http_verb}\""
+    " to \"{url_template}\" with \"{data_template}\""))
 def add_reactor(context, name, type_, http_verb, url_template,
                 data_template=""):
     """ Add a reactor-type sensor """
