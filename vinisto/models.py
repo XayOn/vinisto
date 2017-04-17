@@ -2,9 +2,7 @@
 Models
 """
 
-import json
 import peewee
-import requests
 
 DATABASE = peewee.SqliteDatabase("temp")
 
@@ -36,10 +34,6 @@ class Sensor(peewee.Model):
     name = peewee.TextField()
     type = peewee.TextField()
     value = peewee.TextField(null=True)
-    http_verb = peewee.TextField(null=True)
-    url_template = peewee.TextField(null=True)
-    reacts = peewee.BooleanField(null=True)
-    data_template = peewee.TextField(null=True)
 
     class Meta:
         # pylint: disable=missing-docstring, too-few-public-methods
@@ -51,20 +45,9 @@ class Sensor(peewee.Model):
         request.
         """
         # pylint: disable=no-member
-        if not self.reacts:
+        if self.type not in self.update_types:
             return False
 
-        data = {}
-        if self.data_template:
-            data = json.loads(self.data_template.format(
-                    name=self.name, value=self.value))
-
-        try:
-            return getattr(requests, self.http_verb)(
-                self.url_template.format(name=self.name, value=self.value),
-                data=data)
-        except Exception as err:
-            print(err)
-
+        # TODO: Publish it via MQTT.
 
 DATABASE.create_tables([Sensor, Feature], safe=True)

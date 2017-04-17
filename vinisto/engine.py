@@ -9,8 +9,10 @@ from copy import deepcopy
 from gettext import gettext
 from random import choice
 
-from fuzzycucumber import when, then, given
-from fuzzycucumber.runner import Runner
+from behave import when, then, given
+from behave.configuration import Configuration
+from behave.parser import parse_feature
+from behave.runner import Runner, Context
 
 from pyknow import KnowledgeEngine
 from pyknow import Rule, AND, L, P
@@ -24,36 +26,41 @@ class SensorFact(Fact):
     pass
 
 
-@cucumber.given(gettext("I have a sensor {name}"))
+@given(gettext("I have a sensor {name}"))
 def add_sensor(_, name):
     """ Add a sensor to db """
     Sensor.get_or_create(name=name, type="sensor")
 
 
-@cucumber.given(gettext(
-    "I have a {type_} \"{name}\" that reacts on \"{http_verb}\""
-    " to \"{url_template}\""))
-@cucumber.given(gettext(
-    "I have a {type_} \"{name}\" that reacts on \"{http_verb}\""
-    " to \"{url_template}\" with \"{data_template}\""))
-def add_reactor(context, name, type_, http_verb, url_template,
-                data_template=""):
-    """ Add a reactor-type sensor """
+@given(gettext("I have an infrarred remote {remote} with a button {button}"))
+def add_reactor(context, remote, button):
+    """
+    Add a reactor-type sensor
+    I have an infrarred remote {remote} with a button {button}
+    """
     try:
-        sensor, _ = Sensor.get_or_create(name=name, type=type_)
-        sensor.reacts = True
-        sensor.http_verb = http_verb
-        sensor.url_template = url_template
-        sensor.data_template = data_template
+        sensor, _ = Sensor.get_or_create(name="{}{}".format(remote, button))
+        sensor.type = "button"
+        sensor.path = 'lirc/set/{}/{}'.format(remote, button)
         sensor.save()
     except Exception as excp:
         context.exceptions.append(excp)
 
 
-@given(gettext("I have a {type_} \"{name}\" that does not react"))
-def add_nonreactor(_, type_, name):
+@given(gettext("I have a {type_} from {toplevel} on {room} "
+               "controlling {what}"))
+def add_nonreactor(type_, toplevel, room, what):
     """ Add a not-reactive sensor """
-    Sensor.get_or_create(name=name, type=type_, reacts=False)
+    if type_ in Sensor.update_types:
+        Sensor.get_or_create(name="{}{}{}{}".format(
+                                type_, toplevel, room, what),
+                             type=type_,
+                             path="{}/set/{}{}".format())
+    else:
+        Sensor.get_or_create(name="{}{}{}".format(
+                                type_, toplevel, room, what),
+                             type=type_,
+                             path="{}/status/{}{}".format())
 
 
 @when(gettext("sensor {sensor} has value {value}"))
@@ -69,8 +76,6 @@ def sensor_has_value_t(context, sensor, value):
     When we receive a fact that the sensor has a value that
     evaluates the next expression...
     """
-    sensor = sensor.replace(' ', '_')
-
     # pylint:disable=exec-used, unused-argument
 
     def test(val):
@@ -87,8 +92,6 @@ def sensor_is_off(context, sensor, value):
     """
     Sensor is off
     """
-    sensor = sensor.replace(' ', '_')
-
     # pylint:disable=exec-used, unused-argument
 
     def test(val):
@@ -106,7 +109,7 @@ def set_sensor_value(context, sensor, value=False, state=False):
     """
     if state:
         value = {"on": 1, "off": 0}.get(state)
-    sensor = Sensor.get(name=sensor.replace(' ', '_'))
+    sensor = Sensor.get(name=sensor)
 
     def _set_sensor_value(_):
         sensor.value = value
