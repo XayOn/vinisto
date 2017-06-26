@@ -30,28 +30,30 @@ Technical part
 --------------
 
 Vinisto uses all the power of an expert system combined with the syntax
-of a great language for defining software features (gherkins).
+of a great language for defining software features (cucumber).
 
 That is acomplished with the following:
 
-- A library that converts a series of features in input for a knowledge engine
+- A library that converts a series of features to pyknow
   (http://github.com/buguroo/pyknow)
-- A REST API with simple database models
-- External data providers to receive and emit data to receiver/emitter
-- An almost-real-time web interface
+- An interface from-to rethinkdb for sensor data keeping and changes streaming
+- Microservices (TODO) that read on those rethinkdb changes and propagate them
+  to more standard IOT services (like MQTT) as well as web services.
 
-How to contribute
------------------
+Rethinkdb only marks updates if the value changed, wich helps with some
+usual IoT problems.
 
-Right now, the most useful contribution would probably be a ticket with information on a device
-you want to support:
 
-- Device model
-- MQTT json info (if it's not json, the specific format)
+TODO
+----
 
-Running infrared module
------------------------
+All the external services are to be made. That is, from now (suggestions accepted):
 
-::
+- A web interface using the streaming changes API.
+- Store features in the database
+- A service that listens on either features or sensor changes
+  and relaunches the engine
 
-        python -m aiohttp.web -H localhost -P 8080 vinisto.services.infrared:run
+Probably-very-useful-services:
+- An MQTT from-to rethinkdb streaming changes.
+- A simple configurable service that exposes changes over HTTP Rest.
