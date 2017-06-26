@@ -13,16 +13,12 @@ This means, that you can specify rules for your home domotic system as
 
    Feature: If there is cold, turn the heater on
    Scenario:
-     Given I have a sensor temperature_living
-       And I have a button heater that reacts on "get" to "http://heater/?state={value}"
-         And the sensor temperature_living has a value < 15
+        Given the sensor temperature_living has a value < 15
         Then turn on heater
 
    Feature: If there is too hot, turn the heater off
    Scenario:
-       Given I have a sensor temperature_living
-       And I have a button heater that reacts on "get" to "http://heater/?state={value}"
-         And the sensor temperature_living has a value > 20
+        Given the sensor temperature_living has a value > 20
         Then turn off heater
 
 
