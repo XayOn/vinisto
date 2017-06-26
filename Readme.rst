@@ -14,13 +14,18 @@ This means, that you can specify rules for your home domotic system as
    Feature: If there is cold, turn the heater on
    Scenario:
         Given the sensor temperature_living has a value < 15
+        And winter is coming
         Then turn on heater
 
    Feature: If there is too hot, turn the heater off
    Scenario:
         Given the sensor temperature_living has a value > 20
+        And winter is coming
         Then turn off heater
 
+For this to work, we'd need a simple sensor temperature_living wich produces
+an int value, and a sensor "winter" that is a string of value "coming" (for example,
+produced by an external weather sensor that writes to rethinkdb or mqtt)
 
 Technical part
 --------------
@@ -45,6 +50,7 @@ TODO
 
 All the external services are to be made. That is, from now (suggestions accepted):
 
+- Try to convert all values to int before comparing if they're digits
 - A web interface using the streaming changes API.
 - Store features in the database
 - A service that listens on either features or sensor changes
