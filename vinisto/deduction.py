@@ -30,7 +30,6 @@ from gettext import gettext
 from random import choice
 import logging
 import operator
-import glob
 import string
 import sys
 import pathlib
@@ -48,21 +47,9 @@ from pyknow import Rule, AND, P, Fact, KnowledgeEngine, watchers
 logging.basicConfig(level=logging.DEBUG)
 watchers.watch()
 
-OPTIONS = docopt.docopt(__doc__)
-
-CONN = r.connect(OPTIONS["--db-host"], OPTIONS["--db-port"],
-                 OPTIONS["--db-db"], OPTIONS["--db-user"],
-                 OPTIONS["--db-password"])
-
 
 def _random_name():
     return ''.join(choice(string.ascii_uppercase) for _ in range(10))
-
-
-def set_value(name, value):
-    """ Set value in rethinkdb sensors database """
-    r.table(OPTIONS['--db-table']).insert({name: name, value: value},
-                                          {"conflict": "update"}).run(CONN)
 
 
 class SensorFact(Fact):
@@ -100,7 +87,7 @@ def set_sensor_value(context, sensor, value=False, state=False):
     rules = context.rules.copy()
     context.rules.clear()
     context.final_rules.append(Rule(AND(*rules))(partial(
-        set_value, sensor=sensor.replace(' ', '_'), value=value)))
+        context.set_value, sensor=sensor.replace(' ', '_'), value=value)))
 
 
 class VinistoEngine:
@@ -141,9 +128,22 @@ class VinistoEngine:
 
 def run():
     """ Engine execution entry point """
-    rules = [open(f).read() for f in glob.glob(
-        pathlib.Path(OPTIONS['--rules-dir']) / '*.feature')]
-    engine = VinistoEngine(rules)
+    options = docopt.docopt(__doc__)
+
+    conn = r.connect(options["--db-host"], options["--db-port"],
+                     options["--db-db"], options["--db-user"],
+                     options["--db-password"])
+
+    rules = (f.read_text() for f in pathlib.Path(
+        options['--rules-dir']).glob('*.feature'))
+
+    def set_value(name, value):
+        """ Set value in rethinkdb sensors database """
+        r.table(options['--db-table']).insert({name: name, value: value},
+                                              {"conflict": "update"}).run(conn)
+
+    engine = VinistoEngine(features_list=rules,
+                           base_context={'set_value': set_value})
     engine.reset()
-    engine.declare(*(SensorFact(**k) for k in r.table(OPTIONS['--db-table'])))
+    engine.declare(*(SensorFact(**k) for k in r.table(options['--db-table'])))
     engine.run()
