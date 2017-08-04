@@ -1,27 +1,27 @@
-r"""Vinisto Knowledge Engine.
+# noqa: D301
+"""Vinisto Knowledge Engine.
 
 Runs a KE given a specific set of rules (from a directory)
 
 Usage:
-    vinisto_engine --db-host <HOST> --db-port <PORT> --db-db <DB> \
---db-user <USER> --db-password <PASSWORD> --db-table <TABLE> --rules-dir <DIR>
+    vinisto_engine --dbhost <HOST> --dbport <PORT> --dbdb <DB> \
+--dbuser <USER> --dbpassword <PASSWORD> --dbtable <TABLE> --rulesdir <DIR>
 
 Options:
-    --db-db=<DB>             Database
-    --db-host <HOST>         Host
-    --db-port <PORT>         Port
-    --db-user <USER>         User
-    --db-password <PASSWORD> Pass
-    --db-table <TABLE>       Table
-    --rules-dir <DIR>        Rules dir
+    --dbdb=<DB>             Database
+    --dbhost <HOST>         Host
+    --dbport <PORT>         Port
+    --dbuser <USER>         User
+    --dbpassword <PASSWORD> Pass
+    --dbtable <TABLE>       Table
+    --rulesdir <DIR>        Rules dir
 
 Examples:
-    vinisto_engine --db-host localhost --db-port 28015 --db-db vinisto \
---db-user vinisto --db-password vinisto --db-table vinisto --rules-dir \
+    vinisto_engine --dbhost localhost --dbport 28015 --dbdb vinisto \
+--dbuser vinisto --dbpassword vinisto --dbtable vinisto --rulesdir \
 ~/.vinisto_rules
 
 """
-
 # pylint: disable=no-name-in-module
 
 from contextlib import suppress, contextmanager
@@ -184,25 +184,25 @@ def run():
     """Engine execution entry point."""
     options = docopt.docopt(__doc__)
 
-    conn = r.connect(options["--db-host"], options["--db-port"],
-                     options["--db-db"], options["--db-user"],
-                     options["--db-password"])
+    conn = r.connect(options["--dbhost"], options["--dbport"],
+                     options["--dbdb"], options["--dbuser"],
+                     options["--dbpassword"])
 
     rules = (f.read_text() for f in pathlib.Path(
-        options['--rules-dir']).glob('*.feature'))
+        options['--rulesdir']).glob('*.feature'))
 
     def set_value(name, value):
         """Set value in rethinkdb sensors database."""
-        r.table(options['--db-table']).insert({name: name, value: value},
-                                              {"conflict": "update"}).run(conn)
+        r.table(options['--dbtable']).insert({name: name, value: value},
+                                             {"conflict": "update"}).run(conn)
 
     engine = VinistoEngine(features_list=rules,
                            base_context={'set_value': set_value})
 
     # pylint: disable=no-member
     engine.reset()
-    engine.declare(*(SensorFact(**k) for k in r.table(options['--db-table'])))
+    engine.declare(*(SensorFact(**k) for k in r.table(options['--dbtable'])))
     engine.run()
 
     for key, value in engine.result:
-        r.table(options['--db-table']).set(key, value)
+        r.table(options['--dbtable']).set(key, value)

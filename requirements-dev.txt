@@ -1,4 +1,5 @@
 pytest
 coverage
-pydocstyle
-pycodestyle
+pylint
+flake8
+flake8_docstrings
