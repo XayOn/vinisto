@@ -1,6 +1,12 @@
 Vinisto - Your human-like intelligent home
 -------------------------------------------
 
+.. image:: https://badge.fury.io/py/vinisto.svg
+    :target: https://badge.fury.io/py/vinisto
+
+.. image:: https://travis-ci.org/XayOn/vinisto.svg?branch=master
+    :target: https://travis-ci.org/XayOn/vinisto
+
 Vinisto is a Work-In-Progress domotic assistant.
 
 Right now, its intentions are:
