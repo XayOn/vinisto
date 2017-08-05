@@ -1,15 +1,23 @@
 Vinisto - Your human-like intelligent home
 -------------------------------------------
 
+Vinisto is a Work-In-Progress domotic assistant.
 
-Vinisto is a domotic engine made with readability
-(as in easy-to-configure) and flexibility in mind.
+Right now, its intentions are:
+
+- Be human in each part of the process.
+- Have access to as many resources as possible, as less intrusive as possible
+- Be flexible.
+- Be smart.
+- Suggest, don't force.
 
 .. image:: http://68.media.tumblr.com/bc7f86261bd1d671577d51f82b2d0f6d/tumblr_njdb9pgaXv1sa11jco2_500.gif
 
-This means, that you can specify rules for your home domotic system as
+Base Ideas
+----------
 
-::
+In order to acomplish that, we have an expert system with rules that are both
+human readable and machine readable, like::
 
    Feature: If there is cold, turn the heater on
    Scenario:
@@ -23,9 +31,9 @@ This means, that you can specify rules for your home domotic system as
         And winter is coming
         Then turn off heater
 
-For this to work, we'd need a simple sensor temperature_living wich produces
-an int value, and a sensor "winter" that is a string of value "coming" (for example,
-produced by an external weather sensor that writes to rethinkdb or mqtt)
+
+Then, we need an external system that feeds the user with automated rules, guessed
+by its own logic (that's a black box for now), that the user must accept or decline.
 
 Technical part
 --------------
@@ -50,7 +58,6 @@ TODO
 
 All the external services are to be made. That is, from now (suggestions accepted):
 
-- Try to convert all values to int before comparing if they're digits
 - A web interface using the streaming changes API.
 - Store features in the database
 - A service that listens on either features or sensor changes
