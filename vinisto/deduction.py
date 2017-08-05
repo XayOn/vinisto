@@ -1,14 +1,16 @@
 # noqa: D301
+# docopt requires strings to be literals and examples to be on the
+# same line, so we need to override D301 error (backslash on not r'')
 """Vinisto Knowledge Engine.
 
 Runs a KE given a specific set of rules (from a directory)
 
 Usage:
-    vinisto_engine --dbhost <HOST> --dbport <PORT> --dbdb <DB> \
+    vinisto_engine --dbhost <HOST> --dbport <PORT> --db <DB> \
 --dbuser <USER> --dbpassword <PASSWORD> --dbtable <TABLE> --rulesdir <DIR>
 
 Options:
-    --dbdb=<DB>             Database
+    --db=<DB>             Database
     --dbhost <HOST>         Host
     --dbport <PORT>         Port
     --dbuser <USER>         User
@@ -52,9 +54,6 @@ watchers.watch()
 class SensorFact(Fact):
     """Represents a current sensor state."""
 
-    # pylint: disable=missing-docstring
-    pass
-
 
 @contextmanager
 def empty_argv():
@@ -86,6 +85,7 @@ def local_context(base_context, runner, result):
     context.result = result
     runner.context = context
     yield
+    runner.context = None
 
 
 def random_name() -> str:
@@ -177,32 +177,29 @@ class VinistoEngine:
                     with suppress(Exception):
                         parse_feature(data.strip(), None, None).run(runner)
                     logging.debug(context.exceptions, runner.undefined_steps)
-                yield from context.final_rules
+                    yield from context.final_rules
+
+
+def execute_engine(table, conn, rules):
+    """Execute knowledge engine against a rethinkdb table."""
+    # pylint: disable=no-member
+    engine = VinistoEngine(features_list=rules)
+    engine.declare(*(SensorFact(**k) for k in r.table(table)))
+    engine.run()
+
+    for name, value in engine.result:
+        r.table(table).insert({"name": name, "value": value},
+                              {"conflict": "update"}).run(conn)
 
 
 def run():
-    """Engine execution entry point."""
+    """Extract CLI options and runs engine."""
     options = docopt.docopt(__doc__)
-
     conn = r.connect(options["--dbhost"], options["--dbport"],
-                     options["--dbdb"], options["--dbuser"],
+                     options["--db"], options["--dbuser"],
                      options["--dbpassword"])
 
+    # TODO: Get rules from rethinkdb table.
     rules = (f.read_text() for f in pathlib.Path(
         options['--rulesdir']).glob('*.feature'))
-
-    def set_value(name, value):
-        """Set value in rethinkdb sensors database."""
-        r.table(options['--dbtable']).insert({name: name, value: value},
-                                             {"conflict": "update"}).run(conn)
-
-    engine = VinistoEngine(features_list=rules,
-                           base_context={'set_value': set_value})
-
-    # pylint: disable=no-member
-    engine.reset()
-    engine.declare(*(SensorFact(**k) for k in r.table(options['--dbtable'])))
-    engine.run()
-
-    for key, value in engine.result:
-        r.table(options['--dbtable']).set(key, value)
+    return execute_engine(options['--dbtable'], conn, rules)
