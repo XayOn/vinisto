@@ -1,0 +1,148 @@
+CHANGES
+=======
+
+* Updated readme
+* Small fixes
+* Added tests
+* Small refactor
+* Added empty tests
+* Funnier example
+* updated examples
+* Project rewrite
+* Moved to basic state again
+* Fuzzy cucumber
+* Initial cucumber step execution
+* Readme updated
+* Readme updated
+* Added how to run infrared module to readme
+* Sensor auto-update
+* Added aiohttp to requirements
+* Added more aliases to humanice sensor on/off
+* Fixed voice and added infrarred services
+* Fixed a few things
+* Added sensors page
+* Updated to latest API. Added new static interface
+* Updated readme
+* Fixed templating
+* Fixed MQTT connector
+* Added prototype for feature listings
+* Prototype using potion_client
+* Even more simplification
+* Initial API with flask-potion
+* Simplification
+* Yet again..
+* Reorganized again. This is probably the latest
+* More reestructuration
+* Added basic REST consumer
+* Yet another project reestructuration
+* Added emitter concept, fixed tests
+* More movement
+* WIP, project reestructuration
+* Fixed a few tests
+* Improvements in voice recognition
+* Voice recognition prototype
+* Minor update on readme
+* Added basic tests
+* Rule extraction complete
+* PBR
+* Updated setup.py
+* Deleted old tests
+* Complete rewrite and planning on the project
+* broken tests
+* Minor fix
+* Cleaner gitignore
+* Swapfiles
+* Rewrite
+* Initial rewrite
+* Added new deps
+* Automatically download nltk db
+* Added a markov plugin
+* complex_ir plugin now is able to actually CONFIGURE lirc
+* Added web interface
+* Added i18n tokenizer using nltk
+* bump
+* bump
+* Now it kinda works..
+* Hotfix, updated to latest sr syntax on microphone call
+* hotfix. sample rate is an int
+* Version bump
+* Updated to latest speech_recognition
+* forgot to add po and mo files
+* Version bump
+* better package management
+* version bump
+* complex ir
+* Version 0.1.2
+* Improved logging messages on main
+* paste issue
+* Damn gitter screwed up my linked readme
+* Update Readme.rst
+* Added Gitter badge
+
+0.1.1
+-----
+
+* setup and history
+* Fixed repeat plugin
+* Moved log to init
+* Fixed tts playing (was on a strange voice =P) for google tts
+
+0.1.0
+-----
+
+* Rlease 0.1.0, this may be considered as the first serious release towards 1.0.0
+* Added compiled tranlsation back
+* updated translations
+* time.py plugin i18n, no translations yet
+* repeat.py plugin i18n, no translations yet
+* ir.py plugin i18n, no translations yet
+* gpio.py plugin i18n, no translations yet
+* This was a tuple
+* Now it uses locale to get default lang
+* Internationalization ready, spanish translation for the key phrase added. Removed old defaultdict way
+* After we get the initial text, if the only text received is the butler's name, we'll say "Yes, master" (or the equivalent in given language). That added a certain lag preventing people who spoke too fast to get a nice user experience, so that part is now threaded
+
+0.0.10
+------
+
+* Setup and readme
+* Updated readme
+
+0.0.9
+-----
+
+* setup and history
+* bugfix
+* Added ir module
+
+0.0.8
+-----
+
+* history and setup
+* Added support to specify phrase via arguments. Fixed a small bug in kewords defaultdict
+* Added support for i18n kewords Added response from vinisto if only keyword was spoken Added support to talk the entire phrase "vinisto, do something"
+* Added language rate and key to params
+
+0.0.7
+-----
+
+* setup and history
+* Added parameter handling
+
+0.0.6
+-----
+
+* Setup and readme updated
+* Dont break if rpi.gpio cant be loaded
+* Avoid breaking on lookuperror from google stt
+* Fixed previous commit
+* Wait to hear 'vinisto'
+* Added (untested) input support for GPIOs
+* Using unicode_literals
+* Gpio plugin
+* New gpio plugin
+* Documented default behavior
+* gitignore
+* Stopped using mplayer, using pygame now to play audio
+* Initial commit
+* Readme
