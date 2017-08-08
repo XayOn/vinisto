@@ -6,3 +6,5 @@ dist/
 __pycache__
 *.egg-info
 .*.sw?
+.tox
+.coverage
