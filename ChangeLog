@@ -1,6 +1,12 @@
 CHANGES
 =======
 
+* Added html coverage to gitignore
+* Added authoris and changelog
+* Added Behaviour base test for vinisto deduction engine
+* Restarting. Now TDD and BDD style
+* Small refactor
+* Added badges
 * Updated readme
 * Small fixes
 * Added tests
@@ -26,7 +32,7 @@ CHANGES
 * Fixed templating
 * Fixed MQTT connector
 * Added prototype for feature listings
-* Prototype using potion_client
+* Prototype using potion\_client
 * Even more simplification
 * Initial API with flask-potion
 * Simplification
@@ -57,7 +63,7 @@ CHANGES
 * Added new deps
 * Automatically download nltk db
 * Added a markov plugin
-* complex_ir plugin now is able to actually CONFIGURE lirc
+* complex\_ir plugin now is able to actually CONFIGURE lirc
 * Added web interface
 * Added i18n tokenizer using nltk
 * bump
@@ -66,7 +72,7 @@ CHANGES
 * Hotfix, updated to latest sr syntax on microphone call
 * hotfix. sample rate is an int
 * Version bump
-* Updated to latest speech_recognition
+* Updated to latest speech\_recognition
 * forgot to add po and mo files
 * Version bump
 * better package management
@@ -138,7 +144,7 @@ CHANGES
 * Fixed previous commit
 * Wait to hear 'vinisto'
 * Added (untested) input support for GPIOs
-* Using unicode_literals
+* Using unicode\_literals
 * Gpio plugin
 * New gpio plugin
 * Documented default behavior
