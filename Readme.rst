@@ -62,13 +62,22 @@ usual IoT problems.
 TODO
 ----
 
-All the external services are to be made. That is, from now (suggestions accepted):
+We need connectors:
 
-- A web interface using the streaming changes API.
-- Store features in the database
-- A service that listens on either features or sensor changes
-  and relaunches the engine
+- Rethinkdb
+- MQTT
+- Disk
 
-Probably-very-useful-services:
-- An MQTT from-to rethinkdb streaming changes.
-- A simple configurable service that exposes changes over HTTP Rest.
+Future ideas
+------------
+
+This is actually a pure-domotic engine, that is, sensors/activators handling
+based on a predefined ruleset.
+
+It'd be nice to either:
+- Integrate with other intent-hadndling systems
+- Have an intent-handling system of our own with plugins, like mycroft.ai
+
+Another ideas:
+- Add a classification engine that finds out behavioural patterns and suggests them
+  to the user.
