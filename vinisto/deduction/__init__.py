@@ -44,7 +44,7 @@ from behave.parser import parse_feature
 from behave.runner import Runner, Context
 from pyknow import Rule, AND, P, Fact, KnowledgeEngine, watchers
 
-import vinisto.connectors
+from . import connectors
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -198,5 +198,5 @@ class DeductionEngine:
 def run():
     """Execute DeductionEngine with given connector and options."""
     args = docopt.docopt(__doc__)
-    connector = getattr(vinisto.connectors, args.pop('--connector'))(args)
+    connector = getattr(connectors, args.pop('--connector'))(args)
     return DeductionEngine(connector).run()

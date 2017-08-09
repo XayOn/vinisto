@@ -1,6 +1,8 @@
 CHANGES
 =======
 
+* Updated readme
+* Added pytest-cov
 * Added main code. Still not passing all tests
 * Added unit tests
 * Added html coverage to gitignore
